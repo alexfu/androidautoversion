@@ -67,7 +67,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         return project.task(name) << {
             def extension = (AndroidAutoVersionExtension) project.androidAutoVersion;
             def version = extension.getVersion();
-            def newVersion = updateVersion(version, VersionType.MAJOR);
+            def newVersion = updateVersion(version, type);
 
             // Prompt for confirmation
             confirmRelease(version.toString(), newVersion.toString());
