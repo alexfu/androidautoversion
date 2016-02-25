@@ -1,5 +1,6 @@
 # Android Auto-Version
-This is a Gradle plugin, for Android developers, that automates app versioning. 
+This is a Gradle plugin, for Android developers, that automates app versioning. You can read more
+about this plugins inception here: http://alexfu.github.io/2015/11/09/Android-Auto-Versioning
 
 # Why
 Not having to remember or worry about when to bump version numbers allows you to focus on what's 
