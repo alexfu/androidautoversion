@@ -21,6 +21,12 @@ All of these tasks will do the following when executed:
 **NOTE:** This plugin will *not* push any changes to your remote server.
 This is up to the developer to do.
 
+# Caveats
+There is one caveat. Since this plugin uses a system prompt in order to ensure the user really wants
+to make a release, it has been known that `System.console()` will return null if a gradle daemon is 
+running. To work around this, run the desired release task with the `--no-daemon` flag (i.e `./gradlew releaseMajor --no-daemon`).
+There is currently an open issue for this [here](https://issues.gradle.org/browse/GRADLE-2310). 
+
 # How
 To use this plugin...
 
