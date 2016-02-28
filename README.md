@@ -35,7 +35,7 @@ To use this plugin...
 Create a versioning file. This file is a simple JSON file that specifies the components that make
 up your version. Include it in your VCS.
 
-```
+```javascript
 {
   "buildNumber": 99,
   "major": 1,
@@ -47,7 +47,7 @@ up your version. Include it in your VCS.
 ## Step 2
 Include the following in your top-level `build.gradle` file:
 
-```
+```groovy
 buildscript {
   repositories {
     maven { url 'https://jitpack.io' }
@@ -61,7 +61,7 @@ buildscript {
 ## Step 3
 Include the following in your app-level `build.gradle` file:
 
-```
+```groovy
 apply plugin 'com.github.alexfu.androidautoversion'
 
 androidAutoVersion {
