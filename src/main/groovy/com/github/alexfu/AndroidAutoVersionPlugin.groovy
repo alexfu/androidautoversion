@@ -15,6 +15,10 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
 
+        project.afterEvaluate {
+            applyVersion(project, project.androidAutoVersion.getVersion())
+        }
+
         // Create prepare tasks
         def majorPrepTask = makePrepareTask(project, VersionType.MAJOR);
         def minorPrepTask = makePrepareTask(project, VersionType.MINOR);
