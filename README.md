@@ -62,7 +62,7 @@ buildscript {
 Include the following in your app-level `build.gradle` file:
 
 ```groovy
-apply plugin 'com.github.alexfu.androidautoversion'
+apply plugin 'com.github.alexfu.androidautoversion';
 
 androidAutoVersion {
   versionFile file('/path/to/version/file')
