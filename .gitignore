@@ -4,3 +4,4 @@
 *.iml
 gradle.properties
 .DS_Store
+local.properties
