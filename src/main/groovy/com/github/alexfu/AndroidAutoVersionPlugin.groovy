@@ -25,9 +25,11 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def patchPrepTask = makePrepareTask(project, VersionType.PATCH);
 
         // Set up task ordering
-        project.tasks
-            .getByName("assembleRelease")
-            .mustRunAfter(majorPrepTask, minorPrepTask, patchPrepTask)
+        project.tasks.whenTaskAdded { task ->
+            if (task.name.equals("assembleRelease")) {
+                task.mustRunAfter(majorPrepTask, minorPrepTask, patchPrepTask)
+            }
+        }
 
         // Create release tasks
         makeReleaseTask(project, VersionType.MAJOR, majorPrepTask)
