@@ -1,5 +1,17 @@
 # Change Log
 
+## [0.1.4](https://github.com/alexfu/androidautoversion/tree/0.1.4) (2016-06-13)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.3...0.1.4)
+
+**Implemented enhancements:**
+
+- Include a CHANGELOG [\#6](https://github.com/alexfu/androidautoversion/issues/6)
+
+**Closed issues:**
+
+- Remove confirmation step [\#7](https://github.com/alexfu/androidautoversion/issues/7)
+- I'm getting an error with this plugin using com.android.tools.build:gradle:2.2.0-alpha2 [\#5](https://github.com/alexfu/androidautoversion/issues/5)
+
 ## [0.1.3](https://github.com/alexfu/androidautoversion/tree/0.1.3) (2016-03-18)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.2...0.1.3)
 
