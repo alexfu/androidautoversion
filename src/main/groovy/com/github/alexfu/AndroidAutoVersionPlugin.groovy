@@ -73,9 +73,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             def version = extension.getVersion();
             def newVersion = updateVersion(version, type);
 
-            // Prompt for confirmation
-            confirmRelease(version.toString(), newVersion.toString());
-
             // Save new version
             extension.saveVersion(newVersion)
 
@@ -121,19 +118,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             def versionName = version.versionName()
             variant.mergedFlavor.versionCode = versionCode
             variant.mergedFlavor.versionName = versionName
-        }
-    }
-
-    private static def confirmRelease(from, to) {
-        def console = System.console()
-        if (console) {
-            def prompt = "\nUpdating version from $from to $to\nConfirm release [y/n]: ";
-            def confirm = console.readLine(prompt)
-            if (confirm.toLowerCase() != "y") {
-                throw new GradleException("Didn't confirm release, bailing")
-            }
-        } else {
-            throw new GradleException("Cant get a console, bailing")
         }
     }
 }
