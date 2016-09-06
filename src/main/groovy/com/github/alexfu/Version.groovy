@@ -2,6 +2,10 @@ package com.github.alexfu
 
 import groovy.json.internal.LazyMap
 
+import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.MAJOR
+import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.MINOR
+import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.PATCH
+
 class Version {
     int buildNumber = 0;
     int patch = 0;
@@ -42,6 +46,24 @@ class Version {
 
     String toJson() {
         return "{\"major\": $major, \"minor\": $minor, \"patch\": $patch, \"buildNumber\": $buildNumber}"
+    }
+
+    void update(AndroidAutoVersionPlugin.VersionType type) {
+        buildNumber += 1
+        switch (type) {
+            case MAJOR:
+                patch = 0
+                minor = 0
+                major += 1
+                break;
+            case MINOR:
+                patch = 0
+                minor += 1
+                break;
+            case PATCH:
+                patch += 1
+                break;
+        }
     }
 
     @Override

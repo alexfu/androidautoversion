@@ -5,7 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
-    private enum VersionType {
+    enum VersionType {
         MAJOR("Major"), MINOR("Minor"), PATCH("Patch")
         static def all() {
             return [MAJOR, MINOR, PATCH]
@@ -18,7 +18,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         }
     }
 
-    private enum VersionFlavor {
+    enum VersionFlavor {
         RELEASE("Release"), BETA("Beta")
 
         private final String name;
@@ -104,13 +104,13 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         name += type.name
         return project.task(name) << {
             def version = extension.getVersion();
-            def newVersion = updateVersion(version, type);
+            version.update(type);
 
             // Save new version
-            extension.saveVersion(newVersion)
+            extension.saveVersion(version)
 
             // Apply to all variants
-            applyVersion(project, newVersion)
+            applyVersion(project, version)
 
             def git = Grgit.open(project.rootDir)
 
@@ -124,33 +124,13 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
             // Tag
             if (flavor == VersionFlavor.BETA) {
-                git.tag.add(name: "${newVersion.betaVersionName()}")
+                git.tag.add(name: "${version.betaVersionName()}")
             } else {
-                git.tag.add(name: "${newVersion.versionName()}")
+                git.tag.add(name: "${version.versionName()}")
             }
         }
     }
-
-    private def updateVersion(Version version, VersionType type) {
-        Version newVersion = new Version(version)
-        newVersion.buildNumber += 1
-        switch (type) {
-            case VersionType.MAJOR:
-                newVersion.patch = 0
-                newVersion.minor = 0
-                newVersion.major += 1
-                break;
-            case VersionType.MINOR:
-                newVersion.patch = 0
-                newVersion.minor += 1
-                break;
-            case VersionType.PATCH:
-                newVersion.patch += 1
-                break;
-        }
-        return newVersion;
-    }
-
+    
     private def applyVersion(Project project) {
         project.android.applicationVariants.all { variant ->
             def versionCode = extension.getVersion().versionCode()
