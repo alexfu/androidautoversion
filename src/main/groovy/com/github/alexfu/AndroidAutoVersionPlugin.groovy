@@ -90,7 +90,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             git.commit(message: "Update version")
 
             // Tag
-            git.tag.add(name: "v${newVersion.toString()}")
+            git.tag.add(name: "${newVersion.toString()}")
         }
     }
 

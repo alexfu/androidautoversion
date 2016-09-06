@@ -6,6 +6,7 @@ import groovy.json.internal.LazyMap
 
 class AndroidAutoVersionExtension {
     File versionFile
+    Closure<String> versionFormatter
     private Version version
 
     def getVersion() {
@@ -23,7 +24,7 @@ class AndroidAutoVersionExtension {
     private def sanityCheck() {
         if (!version) {
             LazyMap map = new JsonSlurper().parseText(versionFile.text);
-            version = new Version(map)
+            version = new Version(map, versionFormatter)
         }
     }
 }
