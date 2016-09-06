@@ -7,23 +7,29 @@ class Version {
     int patch = 0;
     int minor = 0;
     int major = 0;
+    Closure<String> formatter;
 
     Version(Version source) {
         buildNumber = source.buildNumber;
         patch = source.patch;
         minor = source.minor;
         major = source.major;
+        formatter = source.formatter;
     }
 
-    Version(LazyMap source) {
+    Version(LazyMap source, Closure<String> formatter) {
         buildNumber = source.buildNumber;
         patch = source.patch;
         minor = source.minor;
         major = source.major;
+        this.formatter = formatter;
     }
 
     String versionName() {
-        return "${major}.${minor}.${patch}";
+        if (formatter == null) {
+            return "${major}.${minor}.${patch}"
+        }
+        return formatter.call(major, minor, patch, buildNumber)
     }
 
     int versionCode() {
@@ -32,6 +38,6 @@ class Version {
 
     @Override
     String toString() {
-        return "${major}.${minor}.${patch}.${buildNumber}";
+        return versionName();
     }
 }
