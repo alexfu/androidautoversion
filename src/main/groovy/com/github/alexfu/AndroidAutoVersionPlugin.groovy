@@ -36,6 +36,15 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             extension = project.androidAutoVersion
+
+            // Check extension properties
+            if (extension.releaseTask == null) {
+                throw new IllegalArgumentException("releaseTask must be defined for androidAutoVersion.")
+            }
+            if (extension.versionFile == null) {
+                throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
+            }
+
             applyVersion(project, extension.getVersion())
             makeReleaseTasks(project)
         }
@@ -70,9 +79,9 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def dependencies = [prepTask.name]
 
         if (flavor == VersionFlavor.RELEASE) {
-            def releaseTask = "assembleRelease"
+            def releaseTask = extension.releaseTask
             dependencies.add(releaseTask)
-            def task = project.getTasks().getByName("assembleRelease")
+            def task = project.getTasks().getByName(releaseTask)
             task.mustRunAfter(prepTask)
         }
         if (flavor == VersionFlavor.BETA) {
@@ -142,10 +151,10 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         return newVersion;
     }
 
-    private static def applyVersion(Project project, Version version) {
+    private def applyVersion(Project project) {
         project.android.applicationVariants.all { variant ->
-            def versionCode = version.versionCode()
-            def versionName = version.versionName()
+            def versionCode = extension.getVersion().versionCode()
+            def versionName = extension.getVersion().versionName()
             variant.mergedFlavor.versionCode = versionCode
             variant.mergedFlavor.versionName = versionName
         }

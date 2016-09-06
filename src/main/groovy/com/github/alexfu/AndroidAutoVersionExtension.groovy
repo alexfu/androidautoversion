@@ -2,11 +2,15 @@ package com.github.alexfu
 
 import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
+import org.gradle.api.Nullable
 
 class AndroidAutoVersionExtension {
     File versionFile
-    Closure<String> versionFormatter
-    String betaReleaseTask
+    String releaseTask
+
+    @Nullable Closure<String> versionFormatter
+    @Nullable String betaReleaseTask
+
     private Version version
 
     def getVersion() {
