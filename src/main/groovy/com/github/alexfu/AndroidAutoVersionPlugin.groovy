@@ -20,9 +20,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
     private enum VersionFlavor {
         RELEASE("Release"), BETA("Beta")
-        static def all() {
-            return [RELEASE, BETA]
-        }
 
         private final String name;
 
@@ -46,7 +43,11 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
     private def makeReleaseTasks(Project project) {
         def types = VersionType.all()
-        def flavors = VersionFlavor.all()
+        def flavors = [VersionFlavor.RELEASE]
+
+        if (extension.betaReleaseTask != null) {
+            flavors.add(VersionFlavor.BETA)
+        }
 
         def tasks = []
         for (def flavor in flavors) {
