@@ -1,12 +1,12 @@
 package com.github.alexfu
 
-import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
 
 class AndroidAutoVersionExtension {
     File versionFile
     Closure<String> versionFormatter
+    String betaReleaseTask
     private Version version
 
     def getVersion() {
@@ -16,9 +16,7 @@ class AndroidAutoVersionExtension {
 
     def saveVersion(Version version) {
         this.version = version;
-
-        def contents = new JsonBuilder(version).toPrettyString();
-        versionFile.write(contents);
+        versionFile.write(version.toJson());
     }
 
     private def sanityCheck() {

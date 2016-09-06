@@ -32,8 +32,16 @@ class Version {
         return formatter.call(major, minor, patch, buildNumber)
     }
 
+    String betaVersionName() {
+        return "$versionName()-beta"
+    }
+
     int versionCode() {
         return buildNumber;
+    }
+
+    String toJson() {
+        return "{\"major\": $major, \"minor\": $minor, \"patch\": $patch, \"buildNumber\": $buildNumber}"
     }
 
     @Override
