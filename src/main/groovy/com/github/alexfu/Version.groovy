@@ -50,7 +50,7 @@ class Version {
     }
 
     String toJson() {
-        return "{\"major\": $major, \"minor\": $minor, \"patch\": $patch, \"buildNumber\": $buildNumber}"
+        return "{\"major\": $major, \"minor\": $minor, \"patch\": $patch, \"revision\": $revision, \"buildNumber\": $buildNumber}"
     }
 
     void update(AndroidAutoVersionPlugin.VersionType type) {
