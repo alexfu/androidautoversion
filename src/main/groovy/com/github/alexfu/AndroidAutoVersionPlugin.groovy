@@ -6,9 +6,9 @@ import org.gradle.api.Project
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
     enum VersionType {
-        MAJOR("Major"), MINOR("Minor"), PATCH("Patch")
+        MAJOR("Major"), MINOR("Minor"), PATCH("Patch"), NONE("")
         static def all() {
-            return [MAJOR, MINOR, PATCH]
+            return [MAJOR, MINOR, PATCH, NONE]
         }
 
         private final String name;
