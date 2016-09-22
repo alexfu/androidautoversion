@@ -51,11 +51,11 @@ class Version {
     }
 
     String toJson() {
-        return JsonOutput.toJson([major: $major,
-                                  minor: $minor,
-                                  patch: $patch,
-                                  revision: $revision,
-                                  buildNumber: $buildNumber])
+        return JsonOutput.toJson([major: major,
+                                  minor: minor,
+                                  patch: patch,
+                                  revision: revision,
+                                  buildNumber: buildNumber])
     }
 
     void update(AndroidAutoVersionPlugin.VersionType type) {
