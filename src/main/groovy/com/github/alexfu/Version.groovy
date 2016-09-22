@@ -10,7 +10,7 @@ class Version {
     int patch = 0;
     int minor = 0;
     int major = 0;
-    int revision = 0;
+    int revision = 1;
     Closure<String> formatter;
 
     Version(Version source) {
@@ -18,7 +18,7 @@ class Version {
         patch = source.patch;
         minor = source.minor;
         major = source.major;
-        revision = source.revision;
+        revision = Math.max(1, source.revision);
         formatter = source.formatter;
     }
 
@@ -28,7 +28,7 @@ class Version {
         minor = source.minor;
         major = source.major;
         if (source.revision) {
-            revision = source.revision;
+            revision = Math.max(1, source.revision);
         }
         this.formatter = formatter;
     }
@@ -95,7 +95,7 @@ class Version {
     }
 
     private String applyRevision(String name) {
-        if (revision == 0) return name
-        return "$name.$revision"
+        if (revision == 1) return name
+        return "$name.${revision-1}"
     }
 }
