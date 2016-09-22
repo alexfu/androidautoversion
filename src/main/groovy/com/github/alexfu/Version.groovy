@@ -1,5 +1,6 @@
 package com.github.alexfu
 
+import groovy.json.JsonOutput
 import groovy.json.internal.LazyMap
 
 import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.MAJOR
@@ -50,7 +51,11 @@ class Version {
     }
 
     String toJson() {
-        return "{\"major\": $major, \"minor\": $minor, \"patch\": $patch, \"revision\": $revision, \"buildNumber\": $buildNumber}"
+        return JsonOutput.toJson([major: $major,
+                                  minor: $minor,
+                                  patch: $patch,
+                                  revision: $revision,
+                                  buildNumber: $buildNumber])
     }
 
     void update(AndroidAutoVersionPlugin.VersionType type) {
