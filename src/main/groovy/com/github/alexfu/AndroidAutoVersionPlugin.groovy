@@ -45,7 +45,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                 throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
             }
 
-            applyVersion(project, extension.getVersion())
+            applyVersion(project)
             makeReleaseTasks(project)
         }
     }
@@ -110,7 +110,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             extension.saveVersion(version)
 
             // Apply to all variants
-            applyVersion(project, version)
+            applyVersion(project)
 
             def git = Grgit.open(project.rootDir)
 
@@ -130,7 +130,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             }
         }
     }
-    
+
     private def applyVersion(Project project) {
         project.android.applicationVariants.all { variant ->
             def versionCode = extension.getVersion().versionCode()
