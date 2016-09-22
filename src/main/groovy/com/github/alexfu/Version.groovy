@@ -28,7 +28,9 @@ class Version {
         patch = source.patch;
         minor = source.minor;
         major = source.major;
-        revision = source.revision;
+        if (source.revision) {
+            revision = source.revision;
+        }
         this.formatter = formatter;
     }
 
