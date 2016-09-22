@@ -110,7 +110,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             extension.saveVersion(version)
 
             // Apply to all variants
-            applyVersion(project)
+            applyVersion(project, flavor)
 
             def git = Grgit.open(project.rootDir)
 
@@ -123,18 +123,14 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             git.commit(message: "Update version")
 
             // Tag
-            if (flavor == VersionFlavor.BETA) {
-                git.tag.add(name: "${version.betaVersionName()}")
-            } else {
-                git.tag.add(name: "${version.versionName()}")
-            }
+            git.tag.add(name: "${version.versionNameForFlavor(flavor)}")
         }
     }
 
-    private def applyVersion(Project project) {
+    private def applyVersion(Project project, VersionFlavor flavor = VersionFlavor.RELEASE) {
         project.android.applicationVariants.all { variant ->
             def versionCode = extension.getVersion().versionCode()
-            def versionName = extension.getVersion().versionName()
+            def versionName = extension.getVersion().versionNameForFlavor(flavor)
             variant.mergedFlavor.versionCode = versionCode
             variant.mergedFlavor.versionName = versionName
         }

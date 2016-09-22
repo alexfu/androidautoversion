@@ -3,9 +3,7 @@ package com.github.alexfu
 import groovy.json.JsonOutput
 import groovy.json.internal.LazyMap
 
-import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.MAJOR
-import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.MINOR
-import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.PATCH
+import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.*
 
 class Version {
     int buildNumber = 0;
@@ -35,14 +33,25 @@ class Version {
         this.formatter = formatter;
     }
 
-    String versionName() {
+    private String versionName() {
         if (formatter == null) {
-            return applyRevision("${major}.${minor}.${patch}")
+            return "${major}.${minor}.${patch}"
         }
-        return applyRevision(formatter.call(major, minor, patch, buildNumber))
+        return formatter.call(major, minor, patch, buildNumber)
     }
 
-    String betaVersionName() {
+    String versionNameForFlavor(AndroidAutoVersionPlugin.VersionFlavor flavor) {
+        if (flavor == AndroidAutoVersionPlugin.VersionFlavor.BETA) {
+            return betaVersionName()
+        }
+        return releaseVersionName()
+    }
+
+    private String releaseVersionName() {
+        return applyRevision(versionName())
+    }
+
+    private String betaVersionName() {
         return applyRevision("${versionName()}-beta")
     }
 
