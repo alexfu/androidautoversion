@@ -69,6 +69,7 @@ class Version {
 
     void update(AndroidAutoVersionPlugin.VersionType type) {
         buildNumber += 1
+        revision += 1
         switch (type) {
             case MAJOR:
                 revision = 0
