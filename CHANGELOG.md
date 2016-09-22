@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.2.0](https://github.com/alexfu/androidautoversion/tree/0.2.0) (2016-09-22)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.4...0.2.0)
+
+**Implemented enhancements:**
+
+- Beta support [\#9](https://github.com/alexfu/androidautoversion/pull/9) ([alexfu](https://github.com/alexfu))
+- Custom version name format [\#8](https://github.com/alexfu/androidautoversion/pull/8) ([alexfu](https://github.com/alexfu))
+
 ## [0.1.4](https://github.com/alexfu/androidautoversion/tree/0.1.4) (2016-06-13)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.3...0.1.4)
 
