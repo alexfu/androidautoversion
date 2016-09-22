@@ -43,7 +43,7 @@ class Version {
     }
 
     String betaVersionName() {
-        return applyRevision("$versionName()-beta")
+        return applyRevision("${versionName()}-beta")
     }
 
     int versionCode() {
