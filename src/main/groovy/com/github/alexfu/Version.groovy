@@ -11,6 +11,7 @@ class Version {
     int patch = 0;
     int minor = 0;
     int major = 0;
+    int revision = 0;
     Closure<String> formatter;
 
     Version(Version source) {
@@ -18,6 +19,7 @@ class Version {
         patch = source.patch;
         minor = source.minor;
         major = source.major;
+        revision = source.revision;
         formatter = source.formatter;
     }
 
@@ -26,18 +28,19 @@ class Version {
         patch = source.patch;
         minor = source.minor;
         major = source.major;
+        revision = source.revision;
         this.formatter = formatter;
     }
 
     String versionName() {
         if (formatter == null) {
-            return "${major}.${minor}.${patch}"
+            return applyRevision("${major}.${minor}.${patch}")
         }
-        return formatter.call(major, minor, patch, buildNumber)
+        return applyRevision(formatter.call(major, minor, patch, buildNumber))
     }
 
     String betaVersionName() {
-        return "$versionName()-beta"
+        return applyRevision("$versionName()-beta")
     }
 
     int versionCode() {
@@ -52,15 +55,18 @@ class Version {
         buildNumber += 1
         switch (type) {
             case MAJOR:
+                revision = 0
                 patch = 0
                 minor = 0
                 major += 1
                 break;
             case MINOR:
+                revision = 0
                 patch = 0
                 minor += 1
                 break;
             case PATCH:
+                revision = 0
                 patch += 1
                 break;
         }
@@ -69,5 +75,10 @@ class Version {
     @Override
     String toString() {
         return versionName();
+    }
+
+    private String applyRevision(String name) {
+        if (revision == 0) return name
+        return "$name.$revision"
     }
 }
