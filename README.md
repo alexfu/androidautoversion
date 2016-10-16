@@ -34,7 +34,8 @@ up your version. Include it in your VCS.
   "buildNumber": 99,
   "major": 1,
   "minor": 0,
-  "patch": 1
+  "patch": 1,
+  "revision": 1
 }
 ```
 
@@ -47,7 +48,7 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:0.1.1'
+    classpath 'com.github.alexfu:androidautoversion:0.2.1'
   }
 }
 ```
@@ -56,9 +57,10 @@ buildscript {
 Include the following in your app-level `build.gradle` file:
 
 ```groovy
-apply plugin 'com.github.alexfu.androidautoversion';
+apply plugin: 'com.github.alexfu.androidautoversion'
 
 androidAutoVersion {
+  releaseTask "assembleRelease"
   versionFile file('/path/to/version/file')
 }
 ```
