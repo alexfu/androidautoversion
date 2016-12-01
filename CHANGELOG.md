@@ -1,5 +1,19 @@
 # Change Log
 
+## [0.2.2](https://github.com/alexfu/androidautoversion/tree/0.2.2) (2016-12-01)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.2.1...0.2.2)
+
+**Fixed bugs:**
+
+- Use findByName instead of getByName [\#12](https://github.com/alexfu/androidautoversion/pull/12) ([alexfu](https://github.com/alexfu))
+
+**Closed issues:**
+
+- Gradle sync failed: Task with name 'assembleRelease' not found in project ':app'. [\#11](https://github.com/alexfu/androidautoversion/issues/11)
+
+## [0.2.1](https://github.com/alexfu/androidautoversion/tree/0.2.1) (2016-09-23)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.2.0...0.2.1)
+
 ## [0.2.0](https://github.com/alexfu/androidautoversion/tree/0.2.0) (2016-09-22)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.4...0.2.0)
 
