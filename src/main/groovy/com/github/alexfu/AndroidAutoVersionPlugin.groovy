@@ -81,14 +81,22 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         if (flavor == VersionFlavor.RELEASE) {
             def releaseTask = extension.releaseTask
             dependencies.add(releaseTask)
-            def task = project.getTasks().getByName(releaseTask)
-            task.mustRunAfter(prepTask)
+            def task = project.getTasks().findByName(releaseTask)
+            if (task != null) {
+                task.mustRunAfter(prepTask)
+            } else {
+                println("AndroidAutoVersionPlugin: Unable to find $releaseTask; Skipping task generation for $type $flavor")
+            }
         }
         if (flavor == VersionFlavor.BETA) {
             def betaReleaseTask = extension.betaReleaseTask
             dependencies.add(betaReleaseTask)
-            def task = project.getTasks().getByName(betaReleaseTask)
-            task.mustRunAfter(prepTask)
+            def task = project.getTasks().findByName(betaReleaseTask)
+            if (task != null) {
+                task.mustRunAfter(prepTask)
+            } else {
+                println("AndroidAutoVersionPlugin: Unable to find $betaReleaseTask; Skipping task generation for $type $flavor")
+            }
         }
 
         project.task(name, {
