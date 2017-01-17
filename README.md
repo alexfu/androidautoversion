@@ -15,9 +15,6 @@ This plugin comes with 3 simple tasks:
 
 All of these tasks will bump the version based on semantic versioning rules (http://semver.org)
 
-**NOTE:** This plugin will *not* push any changes to your remote server.
-This is up to the developer to do.
-
 # How
 To use this plugin...
 
