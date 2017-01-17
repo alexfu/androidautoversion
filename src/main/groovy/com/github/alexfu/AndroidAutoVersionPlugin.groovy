@@ -1,6 +1,5 @@
 package com.github.alexfu
 
-import org.ajoberstar.grgit.Grgit
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -119,19 +118,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
             // Apply to all variants
             applyVersion(project, flavor)
-
-            def git = Grgit.open(project.rootDir)
-
-            // Add changes
-            def currentDir = new File(new File("").absolutePath) // File must use absolute path
-            def versionFilePath = currentDir.toPath().relativize(extension.versionFile.toPath()).toString()
-            git.add(update: true, patterns: [versionFilePath])
-
-            // Commit
-            git.commit(message: "Update version")
-
-            // Tag
-            git.tag.add(name: "${version.versionNameForFlavor(flavor)}")
         }
     }
 
