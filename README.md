@@ -13,11 +13,7 @@ This plugin comes with 3 simple tasks:
 - `releaseMinor`
 - `releasePatch`
 
-All of these tasks will do the following when executed:
-
-1. Bump version based on semantic versioning rules (http://semver.org)
-2. Commit the versioning file (using `git`)
-3. Tag your current branch (again, using `git`)
+All of these tasks will bump the version based on semantic versioning rules (http://semver.org)
 
 **NOTE:** This plugin will *not* push any changes to your remote server.
 This is up to the developer to do.
