@@ -1,5 +1,6 @@
 package com.github.alexfu
 
+import javafx.concurrent.Task
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -68,35 +69,31 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     }
 
     private makeReleaseTask(Project project, VersionType type, VersionFlavor flavor) {
+        // Generate task name
         def name = "release"
         if (flavor == VersionFlavor.BETA) {
             name += flavor.name
         }
         name += type.name
 
+        // Set up dependencies on release task
         def prepTask = makePrepareTask(project, type, flavor)
-        def dependencies = [prepTask.name]
+        def dependencies = [prepTask]
+        def task = null
 
         if (flavor == VersionFlavor.RELEASE) {
-            def releaseTask = extension.releaseTask
-            dependencies.add(releaseTask)
-            def task = project.getTasks().findByName(releaseTask)
-            if (task != null) {
-                task.mustRunAfter(prepTask)
-            } else {
-                println("AndroidAutoVersionPlugin: Unable to find $releaseTask; Skipping task generation for $type $flavor")
-            }
+            task = project.getTasks().findByName(extension.releaseTask)
+        } else if (flavor == VersionFlavor.BETA) {
+            task = project.getTasks().findByName(extension.betaReleaseTask)
         }
-        if (flavor == VersionFlavor.BETA) {
-            def betaReleaseTask = extension.betaReleaseTask
-            dependencies.add(betaReleaseTask)
-            def task = project.getTasks().findByName(betaReleaseTask)
-            if (task != null) {
-                task.mustRunAfter(prepTask)
-            } else {
-                println("AndroidAutoVersionPlugin: Unable to find $betaReleaseTask; Skipping task generation for $type $flavor")
-            }
+
+        if (task == null) {
+            println("AndroidAutoVersionPlugin: Unable to find release task for: $type $flavor")
+            return
         }
+
+        task.mustRunAfter prepTask
+        dependencies.add(task)
 
         project.task(name, {
             dependsOn dependencies
