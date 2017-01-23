@@ -6,24 +6,24 @@ import org.gradle.api.Project
 class AndroidAutoVersionPlugin implements Plugin<Project> {
     enum VersionType {
         MAJOR("Major"), MINOR("Minor"), PATCH("Patch"), NONE("")
-        static def all() {
+        static all() {
             return [MAJOR, MINOR, PATCH, NONE]
         }
 
-        private final String name;
+        private final String name
 
         private VersionType(String name) {
-            this.name = name;
+            this.name = name
         }
     }
 
     enum VersionFlavor {
         RELEASE("Release"), BETA("Beta")
 
-        private final String name;
+        private final String name
 
         private VersionFlavor(String name) {
-            this.name = name;
+            this.name = name
         }
     }
 
@@ -49,7 +49,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         }
     }
 
-    private def makeReleaseTasks(Project project) {
+    private makeReleaseTasks(Project project) {
         def types = VersionType.all()
         def flavors = [VersionFlavor.RELEASE]
 
@@ -58,8 +58,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         }
 
         def tasks = []
-        for (def flavor in flavors) {
-            for (def type in types) {
+        for (flavor in flavors) {
+            for (type in types) {
                 tasks.add(makeReleaseTask(project, type, flavor))
             }
         }
@@ -67,7 +67,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         return tasks
     }
 
-    private def makeReleaseTask(Project project, VersionType type, VersionFlavor flavor) {
+    private makeReleaseTask(Project project, VersionType type, VersionFlavor flavor) {
         def name = "release"
         if (flavor == VersionFlavor.BETA) {
             name += flavor.name
@@ -103,15 +103,15 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         })
     }
 
-    private def makePrepareTask(Project project, VersionType type, VersionFlavor flavor) {
+    private makePrepareTask(Project project, VersionType type, VersionFlavor flavor) {
         def name = "prepare"
         if (flavor == VersionFlavor.BETA) {
             name += flavor.name
         }
         name += type.name
         return project.task(name) << {
-            def version = extension.getVersion();
-            version.update(type);
+            def version = extension.getVersion()
+            version.update(type)
 
             // Save new version
             extension.saveVersion(version)
@@ -121,7 +121,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         }
     }
 
-    private def applyVersion(Project project, VersionFlavor flavor = VersionFlavor.RELEASE) {
+    private applyVersion(Project project, VersionFlavor flavor = VersionFlavor.RELEASE) {
         project.android.applicationVariants.all { variant ->
             def versionCode = extension.getVersion().versionCode()
             def versionName = extension.getVersion().versionNameForFlavor(flavor)

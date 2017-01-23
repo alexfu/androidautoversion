@@ -14,18 +14,18 @@ class AndroidAutoVersionExtension {
     private Version version
 
     def getVersion() {
-        sanityCheck();
-        return version;
+        sanityCheck()
+        return version
     }
 
     def saveVersion(Version version) {
-        this.version = version;
-        versionFile.write(version.toJson());
+        this.version = version
+        versionFile.write(version.toJson())
     }
 
-    private def sanityCheck() {
+    private sanityCheck() {
         if (!version) {
-            LazyMap map = new JsonSlurper().parseText(versionFile.text);
+            LazyMap map = new JsonSlurper().parseText(versionFile.text)
             version = new Version(map, versionFormatter)
         }
     }

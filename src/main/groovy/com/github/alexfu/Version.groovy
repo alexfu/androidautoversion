@@ -6,31 +6,31 @@ import groovy.json.internal.LazyMap
 import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.*
 
 class Version {
-    int buildNumber = 0;
-    int patch = 0;
-    int minor = 0;
-    int major = 0;
-    int revision = 0;
-    Closure<String> formatter;
+    int buildNumber = 0
+    int patch = 0
+    int minor = 0
+    int major = 0
+    int revision = 0
+    Closure<String> formatter
 
     Version(Version source) {
-        buildNumber = source.buildNumber;
-        patch = source.patch;
-        minor = source.minor;
-        major = source.major;
-        revision = Math.max(0, source.revision);
-        formatter = source.formatter;
+        buildNumber = source.buildNumber
+        patch = source.patch
+        minor = source.minor
+        major = source.major
+        revision = Math.max(0, source.revision)
+        formatter = source.formatter
     }
 
     Version(LazyMap source, Closure<String> formatter) {
-        buildNumber = source.buildNumber;
-        patch = source.patch;
-        minor = source.minor;
-        major = source.major;
+        buildNumber = source.buildNumber
+        patch = source.patch
+        minor = source.minor
+        major = source.major
         if (source.revision) {
-            revision = Math.max(0, source.revision);
+            revision = Math.max(0, source.revision)
         }
-        this.formatter = formatter;
+        this.formatter = formatter
     }
 
     private String versionName() {
@@ -56,7 +56,7 @@ class Version {
     }
 
     int versionCode() {
-        return buildNumber;
+        return buildNumber
     }
 
     String toJson() {
@@ -76,22 +76,22 @@ class Version {
                 patch = 0
                 minor = 0
                 major += 1
-                break;
+                break
             case MINOR:
                 revision = 0
                 patch = 0
                 minor += 1
-                break;
+                break
             case PATCH:
                 revision = 0
                 patch += 1
-                break;
+                break
         }
     }
 
     @Override
     String toString() {
-        return versionName();
+        return versionName()
     }
 
     private String applyRevision(String name) {
