@@ -28,6 +28,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     }
 
     private AndroidAutoVersionExtension extension
+    private Version version
 
     @Override
     void apply(Project project) {
@@ -35,6 +36,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             extension = project.androidAutoVersion
+            version = new Version(extension)
 
             // Check extension properties
             if (extension.releaseTask == null) {
@@ -106,11 +108,10 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         }
         name += type.name
         return project.task(name) << {
-            def version = extension.getVersion()
             version.update(type)
 
             // Save new version
-            extension.saveVersion(version)
+            extension.versionFile.write(version.toJson())
 
             // Apply to all variants
             applyVersion(project, flavor)
@@ -119,8 +120,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
     private applyVersion(Project project, VersionFlavor flavor = VersionFlavor.RELEASE) {
         project.android.applicationVariants.all { variant ->
-            def versionCode = extension.getVersion().versionCode()
-            def versionName = extension.getVersion().versionNameForFlavor(flavor)
+            def versionCode = version.versionCode()
+            def versionName = version.versionNameForFlavor(flavor)
             variant.mergedFlavor.versionCode = versionCode
             variant.mergedFlavor.versionName = versionName
         }

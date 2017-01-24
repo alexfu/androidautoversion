@@ -1,6 +1,7 @@
 package com.github.alexfu
 
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
 
 import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.*
@@ -13,15 +14,16 @@ class Version {
     int revision = 0
     final Closure<String> formatter
 
-    Version(LazyMap source, Closure<String> formatter) {
-        buildNumber = source.buildNumber
-        patch = source.patch
-        minor = source.minor
-        major = source.major
-        if (source.revision) {
-            revision = Math.max(0, source.revision)
+    Version(AndroidAutoVersionExtension extension) {
+        def version = new JsonSlurper().parseText(extension.versionFile.text)
+        buildNumber = version.buildNumber
+        patch = version.patch
+        minor = version.minor
+        major = version.major
+        if (version.revision) {
+            revision = Math.max(0, version.revision)
         }
-        this.formatter = formatter
+        this.formatter = extension.versionFormatter
     }
 
     private String versionName() {
