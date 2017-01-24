@@ -13,15 +13,6 @@ class Version {
     int revision = 0
     final Closure<String> formatter
 
-    Version(Version source) {
-        buildNumber = source.buildNumber
-        patch = source.patch
-        minor = source.minor
-        major = source.major
-        revision = Math.max(0, source.revision)
-        formatter = source.formatter
-    }
-
     Version(LazyMap source, Closure<String> formatter) {
         buildNumber = source.buildNumber
         patch = source.patch
