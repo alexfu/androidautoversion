@@ -1,9 +1,7 @@
 package com.github.alexfu
 
 import groovy.json.JsonOutput
-import groovy.json.internal.LazyMap
-
-import static com.github.alexfu.AndroidAutoVersionPlugin.VersionType.*
+import groovy.json.JsonSlurper
 
 class Version {
     int buildNumber = 0
@@ -11,37 +9,26 @@ class Version {
     int minor = 0
     int major = 0
     int revision = 0
-    Closure<String> formatter
+    final Closure<String> formatter
 
-    Version(Version source) {
-        buildNumber = source.buildNumber
-        patch = source.patch
-        minor = source.minor
-        major = source.major
-        revision = Math.max(0, source.revision)
-        formatter = source.formatter
-    }
-
-    Version(LazyMap source, Closure<String> formatter) {
-        buildNumber = source.buildNumber
-        patch = source.patch
-        minor = source.minor
-        major = source.major
-        if (source.revision) {
-            revision = Math.max(0, source.revision)
+    Version(AndroidAutoVersionExtension extension) {
+        def version = new JsonSlurper().parseText(extension.versionFile.text)
+        buildNumber = version.buildNumber
+        patch = version.patch
+        minor = version.minor
+        major = version.major
+        if (version.revision) {
+            revision = Math.max(0, version.revision)
         }
-        this.formatter = formatter
+        this.formatter = extension.versionFormatter
     }
 
     private String versionName() {
-        if (formatter == null) {
-            return "${major}.${minor}.${patch}"
-        }
         return formatter.call(major, minor, patch, buildNumber)
     }
 
-    String versionNameForFlavor(AndroidAutoVersionPlugin.VersionFlavor flavor) {
-        if (flavor == AndroidAutoVersionPlugin.VersionFlavor.BETA) {
+    String versionNameForFlavor(VersionFlavor flavor) {
+        if (flavor == VersionFlavor.BETA) {
             return betaVersionName()
         }
         return releaseVersionName()
@@ -67,22 +54,22 @@ class Version {
                                   buildNumber: buildNumber])
     }
 
-    void update(AndroidAutoVersionPlugin.VersionType type) {
+    void update(VersionType type) {
         buildNumber += 1
         revision += 1
         switch (type) {
-            case MAJOR:
+            case VersionType.MAJOR:
                 revision = 0
                 patch = 0
                 minor = 0
                 major += 1
                 break
-            case MINOR:
+            case VersionType.MINOR:
                 revision = 0
                 patch = 0
                 minor += 1
                 break
-            case PATCH:
+            case VersionType.PATCH:
                 revision = 0
                 patch += 1
                 break
