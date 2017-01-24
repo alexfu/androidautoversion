@@ -4,29 +4,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
-    enum VersionType {
-        MAJOR("Major"), MINOR("Minor"), PATCH("Patch"), NONE("")
-        static all() {
-            return [MAJOR, MINOR, PATCH, NONE]
-        }
-
-        private final String name
-
-        private VersionType(String name) {
-            this.name = name
-        }
-    }
-
-    enum VersionFlavor {
-        RELEASE("Release"), BETA("Beta")
-
-        private final String name
-
-        private VersionFlavor(String name) {
-            this.name = name
-        }
-    }
-
     private AndroidAutoVersionExtension extension
     private Version version
 
