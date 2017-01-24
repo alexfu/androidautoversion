@@ -11,7 +11,7 @@ class Version {
     int minor = 0
     int major = 0
     int revision = 0
-    Closure<String> formatter
+    final Closure<String> formatter
 
     Version(Version source) {
         buildNumber = source.buildNumber
@@ -34,9 +34,6 @@ class Version {
     }
 
     private String versionName() {
-        if (formatter == null) {
-            return "${major}.${minor}.${patch}"
-        }
         return formatter.call(major, minor, patch, buildNumber)
     }
 

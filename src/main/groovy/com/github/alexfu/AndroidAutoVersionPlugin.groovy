@@ -1,6 +1,5 @@
 package com.github.alexfu
 
-import javafx.concurrent.Task
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
