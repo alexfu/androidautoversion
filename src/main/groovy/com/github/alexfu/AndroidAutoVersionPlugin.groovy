@@ -78,8 +78,9 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         })
 
         task.doLast {
+            def versionString = version.versionNameForFlavor(flavor)
             extension.postHooks.each { hook ->
-                hook(version.versionNameForFlavor(flavor))
+                hook(versionString)
             }
         }
 
