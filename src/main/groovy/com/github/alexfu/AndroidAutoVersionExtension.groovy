@@ -5,8 +5,9 @@ import org.gradle.api.Nullable
 class AndroidAutoVersionExtension {
     File versionFile
     String releaseTask
+    @Nullable String betaReleaseTask
     Closure<String> versionFormatter = { int major, int minor, int patch, int buildNumber ->
         return "${major}.${minor}.${patch}"
     }
-    @Nullable String betaReleaseTask
+    Closure[] postHooks = new Closure[0]
 }

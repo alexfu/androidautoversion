@@ -57,25 +57,33 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         // Set up dependencies on release task
         def prepTask = makePrepareTask(project, type, flavor)
         def dependencies = [prepTask]
-        def task = null
+        def releaseTask = null
 
         if (flavor == VersionFlavor.RELEASE) {
-            task = project.getTasks().findByName(extension.releaseTask)
+            releaseTask = project.getTasks().findByName(extension.releaseTask)
         } else if (flavor == VersionFlavor.BETA) {
-            task = project.getTasks().findByName(extension.betaReleaseTask)
+            releaseTask = project.getTasks().findByName(extension.betaReleaseTask)
         }
 
-        if (task == null) {
+        if (releaseTask == null) {
             println("AndroidAutoVersionPlugin: Unable to find release task for: $type $flavor")
             return
         }
 
-        task.mustRunAfter prepTask
-        dependencies.add(task)
+        releaseTask.mustRunAfter prepTask
+        dependencies.add(releaseTask)
 
-        project.task(name, {
+        def task = project.task(name, {
             dependsOn dependencies
         })
+
+        task.doLast {
+            extension.postHooks.each { hook ->
+                hook()
+            }
+        }
+
+        return task
     }
 
     private makePrepareTask(Project project, VersionType type, VersionFlavor flavor) {
