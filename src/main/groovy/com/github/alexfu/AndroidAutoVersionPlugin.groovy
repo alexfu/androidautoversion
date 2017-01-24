@@ -79,7 +79,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         task.doLast {
             extension.postHooks.each { hook ->
-                hook()
+                hook(version.versionNameForFlavor(flavor))
             }
         }
 
