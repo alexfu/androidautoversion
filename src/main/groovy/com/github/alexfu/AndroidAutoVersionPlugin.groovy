@@ -13,7 +13,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             extension = project.androidAutoVersion
-            version = new Version(extension)
 
             // Check extension properties
             if (extension.releaseTask == null) {
@@ -21,6 +20,13 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             }
             if (extension.versionFile == null) {
                 throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
+            }
+
+            if (extension.versionFile.exists()) {
+                version = new Version(extension.versionFile, extension.versionFormatter)
+            } else {
+                version = new Version(extension.versionFormatter)
+                extension.versionFile.write(version.toJson())
             }
 
             applyVersion(project)
