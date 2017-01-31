@@ -22,11 +22,11 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                 throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
             }
 
-            if (!extension.versionFile.exists()) {
+            if (extension.versionFile.exists()) {
+                version = new Version(extension.versionFile, extension.versionFormatter)
+            } else {
                 version = new Version(extension.versionFormatter)
                 extension.versionFile.write(version.toJson())
-            } else {
-                version = new Version(extension.versionFile, extension.versionFormatter)
             }
 
             applyVersion(project)
