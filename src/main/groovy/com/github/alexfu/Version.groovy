@@ -15,8 +15,8 @@ class Version {
         this.formatter = formatter
     }
 
-    Version(AndroidAutoVersionExtension extension) {
-        def version = new JsonSlurper().parseText(extension.versionFile.text)
+    Version(File file, Closure<String> formatter) {
+        def version = new JsonSlurper().parseText(file.text)
         buildNumber = version.buildNumber
         patch = version.patch
         minor = version.minor
@@ -24,7 +24,7 @@ class Version {
         if (version.revision) {
             revision = Math.max(0, version.revision)
         }
-        this.formatter = extension.versionFormatter
+        this.formatter = formatter
     }
 
     private String versionName() {

@@ -26,7 +26,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                 version = new Version(extension.versionFormatter)
                 extension.versionFile.write(version.toJson())
             } else {
-                version = new Version(extension)
+                version = new Version(extension.versionFile, extension.versionFormatter)
             }
 
             applyVersion(project)
