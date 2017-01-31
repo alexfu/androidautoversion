@@ -19,20 +19,6 @@ All of these tasks will bump the version based on semantic versioning rules (htt
 To use this plugin...
 
 ## Step 1
-Create a versioning file. This file is a simple JSON file that specifies the components that make
-up your version. Include it in your VCS.
-
-```javascript
-{
-  "buildNumber": 99,
-  "major": 1,
-  "minor": 0,
-  "patch": 1,
-  "revision": 1
-}
-```
-
-## Step 2
 Include the following in your top-level `build.gradle` file:
 
 ```groovy
@@ -46,7 +32,7 @@ buildscript {
 }
 ```
 
-## Step 3
+## Step 2
 Include the following in your app-level `build.gradle` file:
 
 ```groovy
@@ -54,10 +40,10 @@ apply plugin: 'com.github.alexfu.androidautoversion'
 
 androidAutoVersion {
   releaseTask "assembleRelease"
-  versionFile file('/path/to/version/file')
 }
 ```
-## Step 4
+
+## Step 3
 Remove `versionCode` and `versionName` from your `defaultConfig` block!
 
 # Usage
@@ -65,3 +51,13 @@ Every time you want to make a release, decide if it's a major, minor, or a patch
 outlined [here](http://semver.org/) to make your decision. Then, once you've decided, run the
 release task that matches your release type (`releaseMajor`, `releaseMinor`, `releasePatch`).
 At the end of it all, you'll have a tagged branch and release APKs of each app variant.
+
+## Version File
+You will notice that this plugin creates a `version` file for you in the root level directory of your project. This is how the plugin tracks and updates the version. If you would like this file to live elsewhere, you can specify a custom file location like so:
+
+```groovy
+androidAutoVersion {
+  releaseTask "assembleRelease"
+  versionFile file("/path/to/version/file")
+}
+```
