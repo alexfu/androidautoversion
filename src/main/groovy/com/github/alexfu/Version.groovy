@@ -11,6 +11,10 @@ class Version {
     int revision = 0
     final Closure<String> formatter
 
+    Version(Closure<String> formatter) {
+        this.formatter = formatter
+    }
+
     Version(AndroidAutoVersionExtension extension) {
         def version = new JsonSlurper().parseText(extension.versionFile.text)
         buildNumber = version.buildNumber
