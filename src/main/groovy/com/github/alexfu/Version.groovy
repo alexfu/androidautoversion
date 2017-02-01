@@ -39,7 +39,7 @@ class Version {
     }
 
     private String releaseVersionName() {
-        return applyRevision(versionName())
+        return versionName()
     }
 
     private String betaVersionName() {
