@@ -1,15 +1,22 @@
 # Change Log
 
+## [0.3.0](https://github.com/alexfu/androidautoversion/tree/0.3.0) (2017-02-01)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.2.2...0.3.0)
+
+**Merged pull requests:**
+
+- Do not apply revision to normal releases [\#22](https://github.com/alexfu/androidautoversion/pull/22) ([alexfu](https://github.com/alexfu))
+- Use a default version file [\#18](https://github.com/alexfu/androidautoversion/pull/18) ([alexfu](https://github.com/alexfu))
+- Post hooks [\#16](https://github.com/alexfu/androidautoversion/pull/16) ([alexfu](https://github.com/alexfu))
+- Code cleanup [\#15](https://github.com/alexfu/androidautoversion/pull/15) ([alexfu](https://github.com/alexfu))
+- Remove Git dependency [\#14](https://github.com/alexfu/androidautoversion/pull/14) ([alexfu](https://github.com/alexfu))
+
 ## [0.2.2](https://github.com/alexfu/androidautoversion/tree/0.2.2) (2016-12-01)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.2.1...0.2.2)
 
-**Fixed bugs:**
+**Merged pull requests:**
 
 - Use findByName instead of getByName [\#12](https://github.com/alexfu/androidautoversion/pull/12) ([alexfu](https://github.com/alexfu))
-
-**Closed issues:**
-
-- Gradle sync failed: Task with name 'assembleRelease' not found in project ':app'. [\#11](https://github.com/alexfu/androidautoversion/issues/11)
 
 ## [0.2.1](https://github.com/alexfu/androidautoversion/tree/0.2.1) (2016-09-23)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.2.0...0.2.1)
@@ -17,7 +24,7 @@
 ## [0.2.0](https://github.com/alexfu/androidautoversion/tree/0.2.0) (2016-09-22)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.4...0.2.0)
 
-**Implemented enhancements:**
+**Merged pull requests:**
 
 - Beta support [\#9](https://github.com/alexfu/androidautoversion/pull/9) ([alexfu](https://github.com/alexfu))
 - Custom version name format [\#8](https://github.com/alexfu/androidautoversion/pull/8) ([alexfu](https://github.com/alexfu))
@@ -25,22 +32,8 @@
 ## [0.1.4](https://github.com/alexfu/androidautoversion/tree/0.1.4) (2016-06-13)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.3...0.1.4)
 
-**Implemented enhancements:**
-
-- Include a CHANGELOG [\#6](https://github.com/alexfu/androidautoversion/issues/6)
-
-**Closed issues:**
-
-- Remove confirmation step [\#7](https://github.com/alexfu/androidautoversion/issues/7)
-- I'm getting an error with this plugin using com.android.tools.build:gradle:2.2.0-alpha2 [\#5](https://github.com/alexfu/androidautoversion/issues/5)
-
 ## [0.1.3](https://github.com/alexfu/androidautoversion/tree/0.1.3) (2016-03-18)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.1.2...0.1.3)
-
-**Closed issues:**
-
-- Typo in step 3 of readme [\#3](https://github.com/alexfu/androidautoversion/issues/3)
-- Unsopported major.minor version 52.0 error [\#1](https://github.com/alexfu/androidautoversion/issues/1)
 
 **Merged pull requests:**
 
