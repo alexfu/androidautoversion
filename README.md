@@ -27,7 +27,7 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:0.2.2'
+    classpath 'com.github.alexfu:androidautoversion:0.3.0'
   }
 }
 ```
@@ -71,3 +71,18 @@ androidAutoVersion {
   versionFile = file("/path/to/version/file")
 }
 ```
+
+## Post Hooks
+Sometimes you want to execute a script or run some command after the release task has completed. You can do this by specifying a list of `postHooks`:
+
+```groovy
+androidAutoVersion {
+  postHooks = [ 
+    { versionString -> 
+      println("Hello $versionString"!) 
+    } 
+  ]
+}
+```
+
+Post hooks are nothing more than closures with a single argument, the version string (version name). 
