@@ -27,7 +27,7 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:0.2.1'
+    classpath 'com.github.alexfu:androidautoversion:0.2.2'
   }
 }
 ```
@@ -39,7 +39,7 @@ Include the following in your app-level `build.gradle` file:
 apply plugin: 'com.github.alexfu.androidautoversion'
 
 androidAutoVersion {
-  releaseTask "assembleRelease"
+  releaseTask = "assembleRelease"
 }
 ```
 
@@ -50,14 +50,24 @@ Remove `versionCode` and `versionName` from your `defaultConfig` block!
 Every time you want to make a release, decide if it's a major, minor, or a patch. Use the rules
 outlined [here](http://semver.org/) to make your decision. Then, once you've decided, run the
 release task that matches your release type (`releaseMajor`, `releaseMinor`, `releasePatch`).
-At the end of it all, you'll have a tagged branch and release APKs of each app variant.
+At the end of it all, you'll have release APKs of each app variant.
+
+## Beta
+This plugin supports releasing betas. To release a beta, you must first specify a `betaReleaseTask`:
+
+```groovy
+androidAutoVersion {
+  betaReleaseTask = "assembleRelease"
+}
+```
+
+You now have access to the beta variants of the release tasks: `releaseBetaMajor`, `releaseBetaMinor`, and `releaseBetaPatch`. Whenever you run one of these tasks, the version name will have `-beta` appended to it.
 
 ## Version File
 You will notice that this plugin creates a `version` file for you in the root level directory of your project. This is how the plugin tracks and updates the version. If you would like this file to live elsewhere, you can specify a custom file location like so:
 
 ```groovy
 androidAutoVersion {
-  releaseTask "assembleRelease"
-  versionFile file("/path/to/version/file")
+  versionFile = file("/path/to/version/file")
 }
 ```
