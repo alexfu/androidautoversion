@@ -15,8 +15,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             extension = project.androidAutoVersion
 
             // Check extension properties
-            if (extension.releaseTask == null) {
-                throw new IllegalArgumentException("releaseTask must be defined for androidAutoVersion.")
+            if (extension.releaseConfig() == null) {
+                throw new IllegalArgumentException("release config must be defined for androidAutoVersion.")
             }
             if (extension.versionFile == null) {
                 throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
@@ -66,7 +66,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def releaseTask = null
 
         if (flavor == VersionFlavor.RELEASE) {
-            releaseTask = project.getTasks().findByName(extension.releaseTask)
+            releaseTask = project.getTasks().findByName(extension.releaseConfig().releaseTask)
         } else if (flavor == VersionFlavor.BETA) {
             releaseTask = project.getTasks().findByName(extension.betaConfig().releaseTask)
         }
@@ -85,7 +85,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         task.doLast {
             def versionString = version.versionNameForFlavor(flavor)
-            extension.postHooks.each { hook ->
+            extension.releaseConfig().postHooks.each { hook ->
                 hook(versionString)
             }
 
