@@ -89,7 +89,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                 hook(versionString)
             }
 
-            if (extension.betaConfig() != null) {
+            if (flavor == VersionFlavor.BETA && extension.betaConfig() != null) {
                 extension.betaConfig().postHooks.each { hook ->
                     hook(versionString)
                 }
