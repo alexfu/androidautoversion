@@ -1,11 +1,14 @@
 package com.github.alexfu
 
+import org.gradle.api.Nullable
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
     private AndroidAutoVersionExtension extension
     private Version version
+    private FlavorConfig releaseConfig
+    @Nullable private FlavorConfig betaConfig
 
     @Override
     void apply(Project project) {
@@ -13,9 +16,11 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             extension = project.androidAutoVersion
+            releaseConfig = extension.releaseConfig()
+            betaConfig = extension.betaConfig()
 
             // Check extension properties
-            if (extension.releaseConfig() == null) {
+            if (releaseConfig == null) {
                 throw new IllegalArgumentException("release config must be defined for androidAutoVersion.")
             }
             if (extension.versionFile == null) {
@@ -38,7 +43,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def types = VersionType.all()
         def flavors = [VersionFlavor.RELEASE]
 
-        if (extension.betaConfig() != null) {
+        if (betaConfig != null) {
             flavors.add(VersionFlavor.BETA)
         }
 
@@ -66,9 +71,9 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def releaseTask = null
 
         if (flavor == VersionFlavor.RELEASE) {
-            releaseTask = project.getTasks().findByName(extension.releaseConfig().releaseTask)
+            releaseTask = project.getTasks().findByName(releaseConfig.releaseTask)
         } else if (flavor == VersionFlavor.BETA) {
-            releaseTask = project.getTasks().findByName(extension.betaConfig().releaseTask)
+            releaseTask = project.getTasks().findByName(betaConfig.releaseTask)
         }
 
         if (releaseTask == null) {
@@ -85,12 +90,12 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         task.doLast {
             def versionString = version.versionNameForFlavor(flavor)
-            extension.releaseConfig().postHooks.each { hook ->
+            releaseConfig.postHooks.each { hook ->
                 hook(versionString)
             }
 
-            if (flavor == VersionFlavor.BETA && extension.betaConfig() != null) {
-                extension.betaConfig().postHooks.each { hook ->
+            if (flavor == VersionFlavor.BETA && betaConfig != null) {
+                betaConfig.postHooks.each { hook ->
                     hook(versionString)
                 }
             }
