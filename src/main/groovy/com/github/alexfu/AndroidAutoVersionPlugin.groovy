@@ -38,7 +38,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def types = VersionType.all()
         def flavors = [VersionFlavor.RELEASE]
 
-        if (extension.betaReleaseTask != null) {
+        if (extension.betaConfig() != null) {
             flavors.add(VersionFlavor.BETA)
         }
 
@@ -68,7 +68,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         if (flavor == VersionFlavor.RELEASE) {
             releaseTask = project.getTasks().findByName(extension.releaseTask)
         } else if (flavor == VersionFlavor.BETA) {
-            releaseTask = project.getTasks().findByName(extension.betaReleaseTask)
+            releaseTask = project.getTasks().findByName(extension.betaConfig().releaseTask)
         }
 
         if (releaseTask == null) {
@@ -89,8 +89,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                 hook(versionString)
             }
 
-            if (flavor == VersionFlavor.BETA) {
-                extension.betaPostHooks.each { hook ->
+            if (extension.betaConfig() != null) {
+                extension.betaConfig().postHooks.each { hook ->
                     hook(versionString)
                 }
             }
