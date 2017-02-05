@@ -10,4 +10,5 @@ class AndroidAutoVersionExtension {
         return "${major}.${minor}.${patch}"
     }
     Closure[] postHooks = new Closure[0]
+    Closure[] betaPostHooks = new Closure[0]
 }

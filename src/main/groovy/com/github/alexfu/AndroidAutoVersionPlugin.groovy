@@ -88,6 +88,12 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             extension.postHooks.each { hook ->
                 hook(versionString)
             }
+
+            if (flavor == VersionFlavor.BETA) {
+                extension.betaPostHooks.each { hook ->
+                    hook(versionString)
+                }
+            }
         }
 
         return task
