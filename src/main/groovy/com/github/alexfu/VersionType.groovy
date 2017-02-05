@@ -7,7 +7,7 @@ enum VersionType {
         return [MAJOR, MINOR, PATCH, NONE]
     }
 
-    private final String name
+    final String name
 
     private VersionType(String name) {
         this.name = name

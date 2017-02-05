@@ -1,11 +1,14 @@
 package com.github.alexfu
 
+import org.gradle.api.Nullable
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
     private AndroidAutoVersionExtension extension
     private Version version
+    private FlavorConfig releaseConfig
+    @Nullable private FlavorConfig betaConfig
 
     @Override
     void apply(Project project) {
@@ -13,10 +16,12 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             extension = project.androidAutoVersion
+            releaseConfig = extension.releaseConfig()
+            betaConfig = extension.betaConfig()
 
             // Check extension properties
-            if (extension.releaseTask == null) {
-                throw new IllegalArgumentException("releaseTask must be defined for androidAutoVersion.")
+            if (releaseConfig == null) {
+                throw new IllegalArgumentException("release config must be defined for androidAutoVersion.")
             }
             if (extension.versionFile == null) {
                 throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
@@ -38,7 +43,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def types = VersionType.all()
         def flavors = [VersionFlavor.RELEASE]
 
-        if (extension.betaReleaseTask != null) {
+        if (betaConfig != null) {
             flavors.add(VersionFlavor.BETA)
         }
 
@@ -66,9 +71,9 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         def releaseTask = null
 
         if (flavor == VersionFlavor.RELEASE) {
-            releaseTask = project.getTasks().findByName(extension.releaseTask)
+            releaseTask = project.getTasks().findByName(releaseConfig.releaseTask)
         } else if (flavor == VersionFlavor.BETA) {
-            releaseTask = project.getTasks().findByName(extension.betaReleaseTask)
+            releaseTask = project.getTasks().findByName(betaConfig.releaseTask)
         }
 
         if (releaseTask == null) {
@@ -85,8 +90,20 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         task.doLast {
             def versionString = version.versionNameForFlavor(flavor)
+
+            // Run global post hooks first
             extension.postHooks.each { hook ->
                 hook(versionString)
+            }
+
+            if (flavor == VersionFlavor.RELEASE) {
+                releaseConfig.postHooks.each { hook ->
+                    hook(versionString)
+                }
+            } else if (flavor == VersionFlavor.BETA && betaConfig != null) {
+                betaConfig.postHooks.each { hook ->
+                    hook(versionString)
+                }
             }
         }
 
