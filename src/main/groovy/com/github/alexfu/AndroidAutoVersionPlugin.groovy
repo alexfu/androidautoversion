@@ -90,8 +90,10 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
         task.doLast {
             def versionString = version.versionNameForFlavor(flavor)
-            releaseConfig.postHooks.each { hook ->
-                hook(versionString)
+            if (flavor == VersionFlavor.RELEASE) {
+                releaseConfig.postHooks.each { hook ->
+                    hook(versionString)
+                }
             }
 
             if (flavor == VersionFlavor.BETA && betaConfig != null) {
