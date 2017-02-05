@@ -8,6 +8,7 @@ class AndroidAutoVersionExtension {
     Closure<String> versionFormatter = { int major, int minor, int patch, int buildNumber ->
         return "${major}.${minor}.${patch}"
     }
+    Closure[] postHooks = new Closure[0]
     private final FlavorConfig releaseConfig = new FlavorConfig()
     @Nullable private FlavorConfig betaConfig
 
