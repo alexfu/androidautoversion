@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.0.0](https://github.com/alexfu/androidautoversion/tree/1.0.0) (2017-02-06)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.3.0...1.0.0)
+
+**Merged pull requests:**
+
+- FlavorConfig [\#25](https://github.com/alexfu/androidautoversion/pull/25) ([alexfu](https://github.com/alexfu))
+
 ## [0.3.0](https://github.com/alexfu/androidautoversion/tree/0.3.0) (2017-02-01)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/0.2.2...0.3.0)
 
