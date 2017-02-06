@@ -1,4 +1,4 @@
-# Android Auto-Version
+# Android Auto Version
 This is a Gradle plugin, for Android developers, that automates app versioning. You can read more
 about this plugins inception here: http://alexfu.github.io/2015/11/09/Android-Auto-Versioning
 
@@ -27,7 +27,7 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:0.3.0'
+    classpath 'com.github.alexfu:androidautoversion:1.0.0'
   }
 }
 ```
@@ -39,7 +39,9 @@ Include the following in your app-level `build.gradle` file:
 apply plugin: 'com.github.alexfu.androidautoversion'
 
 androidAutoVersion {
-  releaseTask = "assembleRelease"
+  release {
+    releaseTask = "assembleRelease"
+  }
 }
 ```
 
@@ -53,11 +55,13 @@ release task that matches your release type (`releaseMajor`, `releaseMinor`, `re
 At the end of it all, you'll have release APKs of each app variant.
 
 ## Beta
-This plugin supports releasing betas. To release a beta, you must first specify a `betaReleaseTask`:
+This plugin supports releasing betas. To release a beta, you must first specify a beta config block with a `releaseTask`:
 
 ```groovy
 androidAutoVersion {
-  betaReleaseTask = "assembleRelease"
+  beta {
+    releaseTask = "assembleRelease"
+  }
 }
 ```
 
@@ -77,12 +81,40 @@ Sometimes you want to execute a script or run some command after the release tas
 
 ```groovy
 androidAutoVersion {
-  postHooks = [ 
-    { versionString -> 
-      println("Hello $versionString"!) 
-    } 
+  postHooks = [
+    { versionString ->
+      println("Hello $versionString"!)
+    }
   ]
 }
 ```
 
-Post hooks are nothing more than closures with a single argument, the version string (version name). 
+Post hooks are also available in each release flavor:
+
+```groovy
+androidAutoVersion {
+  postHooks = [
+    { versionString ->
+      println("Hello $versionString!")
+    }
+  ]
+
+  release {
+    postHooks = [
+      { versionString ->
+        println("Hello from release!")
+      }
+    ]
+  }
+
+  beta {
+    postHooks = [
+      { versionString ->
+        println("Hello from beta!")
+      }
+    ]
+  }
+}
+```
+
+Post hooks are nothing more than closures with a single argument, the version string (version name).
