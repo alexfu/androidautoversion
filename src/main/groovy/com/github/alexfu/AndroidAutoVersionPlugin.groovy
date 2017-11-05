@@ -23,6 +23,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             if (releaseConfig == null) {
                 throw new IllegalArgumentException("release config must be defined for androidAutoVersion.")
             }
+            releaseConfig.verify()
+
             if (extension.versionFile == null) {
                 throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
             }
