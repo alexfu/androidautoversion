@@ -4,54 +4,44 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 class Version {
-    int buildNumber = 0
-    int patch = 0
-    int minor = 0
-    int major = 0
-
-    Version() {/* No op */}
+    private int buildNumber = 1
+    private int patch = 0
+    private int minor = 0
+    private int major = 0
+    private File file
 
     Version(File file) {
-        def version = new JsonSlurper().parseText(file.text)
-        buildNumber = version.buildNumber
-        patch = version.patch
-        minor = version.minor
-        major = version.major
+        if (file.exists()) {
+            def json = new JsonSlurper().parseText(file.text)
+            buildNumber = json.buildNumber
+            patch = json.patch
+            minor = json.minor
+            major = json.major
+        }
+        this.file = file
     }
 
     String getVersionName() {
-        return "$major.$minor.$patch.$buildNumber"
+        return "$major.$minor.$patch"
     }
 
     int getVersionCode() {
         return buildNumber
     }
 
-    String toJson() {
-        return JsonOutput.toJson(major: major,
-            minor: minor,
-            patch: patch,
-            buildNumber: buildNumber
-        )
-    }
-
     void update(VersionType type) {
         buildNumber += 1
-        revision += 1
         switch (type) {
             case VersionType.MAJOR:
-                revision = 0
                 patch = 0
                 minor = 0
                 major += 1
                 break
             case VersionType.MINOR:
-                revision = 0
                 patch = 0
                 minor += 1
                 break
             case VersionType.PATCH:
-                revision = 0
                 patch += 1
                 break
         }
@@ -60,5 +50,17 @@ class Version {
     @Override
     String toString() {
         return versionName
+    }
+
+    void save() {
+        file.write(toJson())
+    }
+
+    private String toJson() {
+        return JsonOutput.toJson(major: major,
+            minor: minor,
+            patch: patch,
+            buildNumber: buildNumber
+        )
     }
 }

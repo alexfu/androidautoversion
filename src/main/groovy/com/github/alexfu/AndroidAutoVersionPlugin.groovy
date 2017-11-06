@@ -6,20 +6,22 @@ import org.gradle.api.Project
 class AndroidAutoVersionPlugin implements Plugin<Project> {
     private AndroidAutoVersionExtension extension
     private Version version
-    private File versionFile
 
     @Override
     void apply(Project project) {
         extension = project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
-        versionFile = project.file("version")
+        setUp(project)
+        applyVersion(project)
+    }
 
-        if (versionFile.exists()) {
-            version = new Version(versionFile)
-        } else {
-            version = new Version()
-            versionFile.write(version.toJson())
-        }
+    private void setUp(Project project) {
+        File versionFile = project.file("version")
+        version = new Version(versionFile)
+        version.save()
+    }
 
-
+    private void applyVersion(Project project) {
+        project.android.defaultConfig.versionCode = version.versionCode
+        project.android.defaultConfig.versionName = version.versionName
     }
 }
