@@ -45,6 +45,7 @@ class Version {
                 patch += 1
                 break
         }
+        save()
     }
 
     @Override

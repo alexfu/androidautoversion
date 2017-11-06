@@ -14,6 +14,24 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         extension = project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
         setUp(project)
         applyVersion(project)
+        createTasks(project)
+    }
+
+    private void createTasks(Project project) {
+        project.task("bumpPatch").doLast {
+            version.update(VersionType.PATCH)
+            applyVersion(project)
+        }
+
+        project.task("bumpMinor").doLast {
+            version.update(VersionType.MINOR)
+            applyVersion(project)
+        }
+
+        project.task("bumpMajor").doLast {
+            version.update(VersionType.MAJOR)
+            applyVersion(project)
+        }
     }
 
     private void setUp(Project project) {
