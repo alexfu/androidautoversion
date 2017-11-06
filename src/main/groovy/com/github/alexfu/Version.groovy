@@ -17,6 +17,8 @@ class Version {
             patch = json.patch
             minor = json.minor
             major = json.major
+        } else {
+            save()
         }
         this.file = file
     }
@@ -53,7 +55,7 @@ class Version {
         return versionName
     }
 
-    void save() {
+    private void save() {
         file.write(toJson())
     }
 

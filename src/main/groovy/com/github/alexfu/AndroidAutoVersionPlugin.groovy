@@ -35,7 +35,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     private void setUp(Project project) {
         File versionFile = project.file("version")
         version = new Version(versionFile)
-        version.save()
     }
 
     private void applyVersion(Project project) {
