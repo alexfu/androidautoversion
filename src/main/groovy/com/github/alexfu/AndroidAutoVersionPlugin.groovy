@@ -15,8 +15,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         extension = project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
 
         project.afterEvaluate {
-            releaseConfig = extension.releaseConfig()
-            betaConfig = extension.betaConfig()
+            releaseConfig = extension.releaseConfig
+            betaConfig = extension.betaConfig
 
             // Check extension properties
             if (releaseConfig == null) {

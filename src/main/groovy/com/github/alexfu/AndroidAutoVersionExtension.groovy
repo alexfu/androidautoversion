@@ -9,10 +9,13 @@ class AndroidAutoVersionExtension {
         return "${major}.${minor}.${patch}"
     }
     Closure[] postHooks = new Closure[0]
-    private final FlavorConfig releaseConfig = new FlavorConfig()
-    @Nullable private FlavorConfig betaConfig
+    @Nullable FlavorConfig releaseConfig
+    @Nullable FlavorConfig betaConfig
 
     def release(Action<FlavorConfig> action) {
+        if (releaseConfig == null) {
+            releaseConfig = new FlavorConfig()
+        }
         action.execute(releaseConfig)
     }
 
@@ -21,13 +24,5 @@ class AndroidAutoVersionExtension {
             betaConfig = new FlavorConfig()
         }
         action.execute(betaConfig)
-    }
-
-    FlavorConfig releaseConfig() {
-        return releaseConfig
-    }
-
-    @Nullable FlavorConfig betaConfig() {
-        return betaConfig
     }
 }
