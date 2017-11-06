@@ -14,6 +14,17 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     void apply(Project project) {
         extension = project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
 
+        if (extension.versionFile == null) {
+            throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
+        }
+
+        if (extension.versionFile.exists()) {
+            version = new Version(extension.versionFile, extension.versionFormatter)
+        } else {
+            version = new Version(extension.versionFormatter)
+            extension.versionFile.write(version.toJson())
+        }
+
         project.afterEvaluate {
             releaseConfig = extension.releaseConfig
             betaConfig = extension.betaConfig
@@ -23,17 +34,6 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                 throw new IllegalArgumentException("release config must be defined for androidAutoVersion.")
             }
             releaseConfig.verify()
-
-            if (extension.versionFile == null) {
-                throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
-            }
-
-            if (extension.versionFile.exists()) {
-                version = new Version(extension.versionFile, extension.versionFormatter)
-            } else {
-                version = new Version(extension.versionFormatter)
-                extension.versionFile.write(version.toJson())
-            }
 
             applyVersion(project)
             makeReleaseTasks(project)
