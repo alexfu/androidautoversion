@@ -8,54 +8,31 @@ class Version {
     int patch = 0
     int minor = 0
     int major = 0
-    int revision = 0
-    final Closure<String> formatter
 
-    Version(Closure<String> formatter) {
-        this.formatter = formatter
-    }
+    Version() {/* No op */}
 
-    Version(File file, Closure<String> formatter) {
+    Version(File file) {
         def version = new JsonSlurper().parseText(file.text)
         buildNumber = version.buildNumber
         patch = version.patch
         minor = version.minor
         major = version.major
-        if (version.revision) {
-            revision = Math.max(0, version.revision)
-        }
-        this.formatter = formatter
     }
 
-    private String versionName() {
-        return formatter.call(major, minor, patch, buildNumber)
+    String getVersionName() {
+        return "$major.$minor.$patch.$buildNumber"
     }
 
-    String versionNameForFlavor(VersionFlavor flavor) {
-        if (flavor == VersionFlavor.BETA) {
-            return betaVersionName()
-        }
-        return releaseVersionName()
-    }
-
-    private String releaseVersionName() {
-        return versionName()
-    }
-
-    private String betaVersionName() {
-        return applyRevision("${versionName()}-beta")
-    }
-
-    int versionCode() {
+    int getVersionCode() {
         return buildNumber
     }
 
     String toJson() {
-        return JsonOutput.toJson([major: major,
-                                  minor: minor,
-                                  patch: patch,
-                                  revision: revision,
-                                  buildNumber: buildNumber])
+        return JsonOutput.toJson(major: major,
+            minor: minor,
+            patch: patch,
+            buildNumber: buildNumber
+        )
     }
 
     void update(VersionType type) {
@@ -82,11 +59,6 @@ class Version {
 
     @Override
     String toString() {
-        return versionName()
-    }
-
-    private String applyRevision(String name) {
-        if (revision < 2) return name
-        return "$name.${revision-1}"
+        return versionName
     }
 }
