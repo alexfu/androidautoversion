@@ -12,10 +12,9 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
+        extension = project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
 
         project.afterEvaluate {
-            extension = project.androidAutoVersion
             releaseConfig = extension.releaseConfig()
             betaConfig = extension.betaConfig()
 
