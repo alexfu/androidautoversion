@@ -6,12 +6,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
-    private AndroidAutoVersionExtension extension
     private Version version
 
     @Override
     void apply(Project project) {
-        extension = project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
         setUp(project)
         applyVersion(project)
         createTasks(project)
