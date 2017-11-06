@@ -1,5 +1,8 @@
 package com.github.alexfu
 
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.api.ApplicationVariant
 import groovy.xml.Namespace
 import groovy.xml.XmlUtil
 import org.gradle.api.Plugin
@@ -10,6 +13,11 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        boolean hasAndroidAppPlugin = project.plugins.withType(AppPlugin)
+        if (!hasAndroidAppPlugin) {
+            throw new IllegalStateException("'com.android.application' plugin required.")
+        }
+
         setUp(project)
         applyVersion(project)
         createTasks(project)
@@ -38,7 +46,8 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     }
 
     private void applyVersion(Project project) {
-        project.android.applicationVariants.all { variant ->
+        AppExtension android = project.android
+        android.applicationVariants.all { variant ->
             variant.outputs.all { output ->
                 output.processManifest.doLast {
                     File manifestFile = new File("$manifestOutputDirectory/AndroidManifest.xml")
@@ -46,16 +55,23 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                     Namespace ns = new Namespace("http://schemas.android.com/apk/res/android", "android")
 
                     int versionCode = version.versionCode
-                    String versionName = version.versionName
-                    if (variant.buildType.versionNameSuffix) {
-                        versionName += variant.buildType.versionNameSuffix
-                    }
+                    String versionName = applyVariantVersionNameSuffix(variant, version.versionName)
 
                     manifest.attributes().put(ns.versionCode, versionCode)
                     manifest.attributes().put(ns.versionName, versionName)
                     manifestFile.write(XmlUtil.serialize(manifest))
                 }
             }
+        }
+    }
+
+    private static String applyVariantVersionNameSuffix(ApplicationVariant variant, String versionName) {
+        if (variant.mergedFlavor.versionNameSuffix != null) {
+            return versionName + variant.mergedFlavor.versionNameSuffix
+        } else if (variant.buildType.versionNameSuffix != null) {
+            return versionName + variant.buildType.versionNameSuffix
+        } else {
+            return versionName
         }
     }
 }

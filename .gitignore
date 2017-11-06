@@ -5,3 +5,4 @@
 gradle.properties
 .DS_Store
 local.properties
+out
