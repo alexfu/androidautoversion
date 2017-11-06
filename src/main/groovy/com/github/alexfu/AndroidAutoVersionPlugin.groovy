@@ -117,7 +117,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             name += flavor.name
         }
         name += type.name
-        return project.task(name) << {
+        return project.task(name).doFirst {
             version.update(type)
 
             // Save new version
