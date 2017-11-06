@@ -11,6 +11,7 @@ class Version {
     private File file
 
     Version(File file) {
+        this.file = file
         if (file.exists()) {
             def json = new JsonSlurper().parseText(file.text)
             buildNumber = json.buildNumber
@@ -20,7 +21,6 @@ class Version {
         } else {
             save()
         }
-        this.file = file
     }
 
     String getVersionName() {
