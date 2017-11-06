@@ -29,8 +29,15 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                     File manifestFile = new File("$manifestOutputDirectory/AndroidManifest.xml")
                     Node manifest = new XmlParser().parse(manifestFile)
                     Namespace ns = new Namespace("http://schemas.android.com/apk/res/android", "android")
-                    manifest.attributes().put(ns.versionCode, "$version.versionCode")
-                    manifest.attributes().put(ns.versionName, "$version.versionName")
+
+                    int versionCode = version.versionCode
+                    String versionName = version.versionName
+                    if (variant.buildType.versionNameSuffix) {
+                        versionName += variant.buildType.versionNameSuffix
+                    }
+
+                    manifest.attributes().put(ns.versionCode, versionCode)
+                    manifest.attributes().put(ns.versionName, versionName)
                     manifestFile.write(XmlUtil.serialize(manifest))
                 }
             }
