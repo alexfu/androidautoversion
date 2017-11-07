@@ -1,4 +1,4 @@
-# Android Auto-Version
+# AndroidAutoVersion
 This is a Gradle plugin, for Android developers, that automates app versioning.
 
 # Why
@@ -11,6 +11,11 @@ Issue one of these gradle commands:
 - `./gradlew bumpMajor`
 
 and your app will be updated accordingly.
+
+# Requirements
+
+- Android Gradle Plugin 3.0+
+- Gradle 4.0+
 
 # Installation
 
@@ -49,4 +54,23 @@ Running one of these will update the version but will not make a release. To upd
 
 ```bash
 ./gradlew bumpMinor assembleRelease
+```
+
+# Tips
+
+## Alpha/Beta
+If you have alpha/beta versions of your app and want to signify that in your version, i.e. `1.2.3.alpha`, then you can use the `versionNameSuffix` property in your alpha/beta product flavors. For example:
+
+```gradle
+android {
+    productFlavors {
+        alpha {
+            versionNameSuffix ".alpha"
+        }
+
+        beta {
+            versionNameSuffix ".beta"
+        }
+    }
+}
 ```
