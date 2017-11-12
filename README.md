@@ -74,3 +74,10 @@ android {
     }
 }
 ```
+
+## Automate release workflow
+Because this plugin allows you to update your app version from the command line, you can completely automate your entire release workflow with a simple script.
+
+```bash
+./gradlew clean bumpPatch assembleRelease && git add app/version && git commit -m "Update version."
+```
