@@ -1,22 +1,26 @@
-# Android Auto Version
-This is a Gradle plugin, for Android developers, that automates app versioning. You can read more
-about this plugins inception here: http://alexfu.github.io/2015/11/09/Android-Auto-Versioning
+# AndroidAutoVersion
+This is a Gradle plugin, for Android developers, that automates app versioning.
+
+# Migrating from v1
+If you're updating this plugin from version 1, read the [migration guide](https://github.com/alexfu/androidautoversion/wiki/Migration-Guide).
 
 # Why
-Not having to remember or worry about when to bump version numbers allows you to focus on what's
-really important (implementing new features or fixing bugs).
+Thinking of versioning in terms of major, minor, and patch makes it easier to update your app and takes the guess work out of it.
 
-# Benefits
-This plugin comes with 3 simple tasks:
+Issue one of these gradle commands:
 
-- `releaseMajor`
-- `releaseMinor`
-- `releasePatch`
+- `./gradlew bumpPatch`
+- `./gradlew bumpMinor`
+- `./gradlew bumpMajor`
 
-All of these tasks will bump the version based on semantic versioning rules (http://semver.org)
+and your app will be updated accordingly.
 
-# How
-To use this plugin...
+# Requirements
+
+- Android Gradle Plugin 3.0+
+- Gradle 4.0+
+
+# Installation
 
 ## Step 1
 Include the following in your top-level `build.gradle` file:
@@ -27,7 +31,7 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:1.0.0'
+    classpath 'com.github.alexfu:androidautoversion:2.0.0'
   }
 }
 ```
@@ -37,84 +41,48 @@ Include the following in your app-level `build.gradle` file:
 
 ```groovy
 apply plugin: 'com.github.alexfu.androidautoversion'
-
-androidAutoVersion {
-  release {
-    releaseTask = "assembleRelease"
-  }
-}
 ```
 
 ## Step 3
 Remove `versionCode` and `versionName` from your `defaultConfig` block!
 
 # Usage
-Every time you want to make a release, decide if it's a major, minor, or a patch. Use the rules
-outlined [here](http://semver.org/) to make your decision. Then, once you've decided, run the
-release task that matches your release type (`releaseMajor`, `releaseMinor`, `releasePatch`).
-At the end of it all, you'll have release APKs of each app variant.
+When building your project for the first time with this plugin, you should notice a new file added to your project: `[module name]/version`. This is called a verion file. You should check this file into version control (i.e. git) since this file will contain the current version information.
 
-## Beta
-This plugin supports releasing betas. To release a beta, you must first specify a beta config block with a `releaseTask`:
+Every time you want to make a release, decide if it's a major, minor, or a patch. If you're not sure, check out the rules outlined [here](http://semver.org/) to make your decision. Then, once you've decided, run one of the following gradle tasks:
 
-```groovy
-androidAutoVersion {
-  beta {
-    releaseTask = "assembleRelease"
-  }
-}
+- `./gradlew bumpPatch`
+- `./gradlew bumpMinor`
+- `./gradlew bumpMajor`
+
+Running one of these will update the version but will not make a release. To update and make a release, you can append your release task to the end of your update task. For example:
+
+```bash
+./gradlew bumpMinor assembleRelease
 ```
 
-You now have access to the beta variants of the release tasks: `releaseBetaMajor`, `releaseBetaMinor`, and `releaseBetaPatch`. Whenever you run one of these tasks, the version name will have `-beta` appended to it.
+# Tips
 
-## Version File
-You will notice that this plugin creates a `version` file for you in the root level directory of your project. This is how the plugin tracks and updates the version. If you would like this file to live elsewhere, you can specify a custom file location like so:
+## Alpha/Beta
+If you have alpha/beta versions of your app and want to signify that in your version, i.e. `1.2.3.alpha`, then you can use the `versionNameSuffix` property in your alpha/beta product flavors. For example:
 
-```groovy
-androidAutoVersion {
-  versionFile = file("/path/to/version/file")
-}
-```
+```gradle
+android {
+    productFlavors {
+        alpha {
+            versionNameSuffix ".alpha"
+        }
 
-## Post Hooks
-Sometimes you want to execute a script or run some command after the release task has completed. You can do this by specifying a list of `postHooks`:
-
-```groovy
-androidAutoVersion {
-  postHooks = [
-    { versionString ->
-      println("Hello $versionString"!)
+        beta {
+            versionNameSuffix ".beta"
+        }
     }
-  ]
 }
 ```
 
-Post hooks are also available in each release flavor:
+## Automate release workflow
+Because this plugin allows you to update your app version from the command line, you can completely automate your entire release workflow with a simple script.
 
-```groovy
-androidAutoVersion {
-  postHooks = [
-    { versionString ->
-      println("Hello $versionString!")
-    }
-  ]
-
-  release {
-    postHooks = [
-      { versionString ->
-        println("Hello from release!")
-      }
-    ]
-  }
-
-  beta {
-    postHooks = [
-      { versionString ->
-        println("Hello from beta!")
-      }
-    ]
-  }
-}
+```bash
+./gradlew clean bumpPatch assembleRelease && git add app/version && git commit -m "Update version."
 ```
-
-Post hooks are nothing more than closures with a single argument, the version string (version name).

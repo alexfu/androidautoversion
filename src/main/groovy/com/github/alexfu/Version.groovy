@@ -4,89 +4,66 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 class Version {
-    int buildNumber = 0
-    int patch = 0
-    int minor = 0
-    int major = 0
-    int revision = 0
-    final Closure<String> formatter
+    private int buildNumber = 1
+    private int patch = 0
+    private int minor = 0
+    private int major = 0
+    private File file
 
-    Version(Closure<String> formatter) {
-        this.formatter = formatter
-    }
-
-    Version(File file, Closure<String> formatter) {
-        def version = new JsonSlurper().parseText(file.text)
-        buildNumber = version.buildNumber
-        patch = version.patch
-        minor = version.minor
-        major = version.major
-        if (version.revision) {
-            revision = Math.max(0, version.revision)
+    Version(File file) {
+        this.file = file
+        if (file.exists()) {
+            def json = new JsonSlurper().parseText(file.text)
+            buildNumber = json.buildNumber
+            patch = json.patch
+            minor = json.minor
+            major = json.major
+        } else {
+            save()
         }
-        this.formatter = formatter
     }
 
-    private String versionName() {
-        return formatter.call(major, minor, patch, buildNumber)
+    String getVersionName() {
+        return "$major.$minor.$patch"
     }
 
-    String versionNameForFlavor(VersionFlavor flavor) {
-        if (flavor == VersionFlavor.BETA) {
-            return betaVersionName()
-        }
-        return releaseVersionName()
-    }
-
-    private String releaseVersionName() {
-        return versionName()
-    }
-
-    private String betaVersionName() {
-        return applyRevision("${versionName()}-beta")
-    }
-
-    int versionCode() {
+    int getVersionCode() {
         return buildNumber
-    }
-
-    String toJson() {
-        return JsonOutput.toJson([major: major,
-                                  minor: minor,
-                                  patch: patch,
-                                  revision: revision,
-                                  buildNumber: buildNumber])
     }
 
     void update(VersionType type) {
         buildNumber += 1
-        revision += 1
         switch (type) {
             case VersionType.MAJOR:
-                revision = 0
                 patch = 0
                 minor = 0
                 major += 1
                 break
             case VersionType.MINOR:
-                revision = 0
                 patch = 0
                 minor += 1
                 break
             case VersionType.PATCH:
-                revision = 0
                 patch += 1
                 break
         }
+        save()
     }
 
     @Override
     String toString() {
-        return versionName()
+        return versionName
     }
 
-    private String applyRevision(String name) {
-        if (revision < 2) return name
-        return "$name.${revision-1}"
+    private void save() {
+        file.write(toJson())
+    }
+
+    private String toJson() {
+        return JsonOutput.toJson(major: major,
+            minor: minor,
+            patch: patch,
+            buildNumber: buildNumber
+        )
     }
 }

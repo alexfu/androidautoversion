@@ -1,138 +1,92 @@
 package com.github.alexfu
 
-import org.gradle.api.Nullable
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.LibraryPlugin
+import com.android.build.gradle.api.BaseVariant
+import groovy.xml.Namespace
+import groovy.xml.XmlUtil
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.DefaultDomainObjectSet
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
-    private AndroidAutoVersionExtension extension
     private Version version
-    private FlavorConfig releaseConfig
-    @Nullable private FlavorConfig betaConfig
+    private boolean isAppPlugin
+    private boolean isLibraryPlugin
 
     @Override
     void apply(Project project) {
-        project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension)
+        isAppPlugin = project.plugins.withType(AppPlugin)
+        isLibraryPlugin = project.plugins.withType(LibraryPlugin)
+        if (!isAppPlugin && !isLibraryPlugin) {
+            throw new IllegalStateException("'com.android.application' or 'com.android.library' plugin required.")
+        }
 
-        project.afterEvaluate {
-            extension = project.androidAutoVersion
-            releaseConfig = extension.releaseConfig()
-            betaConfig = extension.betaConfig()
+        setUp(project)
+        applyVersion(project)
+        createTasks(project)
+    }
 
-            // Check extension properties
-            if (releaseConfig == null) {
-                throw new IllegalArgumentException("release config must be defined for androidAutoVersion.")
-            }
-            if (extension.versionFile == null) {
-                throw new IllegalArgumentException("versionFile must be defined for androidAutoVersion.")
-            }
-
-            if (extension.versionFile.exists()) {
-                version = new Version(extension.versionFile, extension.versionFormatter)
-            } else {
-                version = new Version(extension.versionFormatter)
-                extension.versionFile.write(version.toJson())
-            }
-
+    private void createTasks(Project project) {
+        project.task("bumpPatch").doLast {
+            version.update(VersionType.PATCH)
             applyVersion(project)
-            makeReleaseTasks(project)
+        }
+
+        project.task("bumpMinor").doLast {
+            version.update(VersionType.MINOR)
+            applyVersion(project)
+        }
+
+        project.task("bumpMajor").doLast {
+            version.update(VersionType.MAJOR)
+            applyVersion(project)
         }
     }
 
-    private makeReleaseTasks(Project project) {
-        def types = VersionType.all()
-        def flavors = [VersionFlavor.RELEASE]
-
-        if (betaConfig != null) {
-            flavors.add(VersionFlavor.BETA)
-        }
-
-        def tasks = []
-        for (flavor in flavors) {
-            for (type in types) {
-                tasks.add(makeReleaseTask(project, type, flavor))
-            }
-        }
-
-        return tasks
+    private void setUp(Project project) {
+        File versionFile = project.file("version")
+        version = new Version(versionFile)
     }
 
-    private makeReleaseTask(Project project, VersionType type, VersionFlavor flavor) {
-        // Generate task name
-        def name = "release"
-        if (flavor == VersionFlavor.BETA) {
-            name += flavor.name
+    private void applyVersion(Project project) {
+        if (isAppPlugin) {
+            AppExtension android = project.android
+            applyVersion(android.applicationVariants)
+        } else if (isLibraryPlugin) {
+            LibraryExtension android = project.android
+            applyVersion(android.libraryVariants)
         }
-        name += type.name
+    }
 
-        // Set up dependencies on release task
-        def prepTask = makePrepareTask(project, type, flavor)
-        def dependencies = [prepTask]
-        def releaseTask = null
+    private applyVersion(DefaultDomainObjectSet<BaseVariant> variants) {
+        variants.all { variant ->
+            variant.outputs.all { output ->
+                output.processManifest.doLast {
+                    File manifestFile = new File("$manifestOutputDirectory/AndroidManifest.xml")
+                    Node manifest = new XmlParser().parse(manifestFile)
+                    Namespace ns = new Namespace("http://schemas.android.com/apk/res/android", "android")
 
-        if (flavor == VersionFlavor.RELEASE) {
-            releaseTask = project.getTasks().findByName(releaseConfig.releaseTask)
-        } else if (flavor == VersionFlavor.BETA) {
-            releaseTask = project.getTasks().findByName(betaConfig.releaseTask)
-        }
+                    int versionCode = version.versionCode
+                    String versionName = applyVariantVersionNameSuffix(variant, version.versionName)
 
-        if (releaseTask == null) {
-            println("AndroidAutoVersionPlugin: Unable to find release task for: $type $flavor")
-            return
-        }
-
-        releaseTask.mustRunAfter prepTask
-        dependencies.add(releaseTask)
-
-        def task = project.task(name, {
-            dependsOn dependencies
-        })
-
-        task.doLast {
-            def versionString = version.versionNameForFlavor(flavor)
-
-            // Run global post hooks first
-            extension.postHooks.each { hook ->
-                hook(versionString)
-            }
-
-            if (flavor == VersionFlavor.RELEASE) {
-                releaseConfig.postHooks.each { hook ->
-                    hook(versionString)
-                }
-            } else if (flavor == VersionFlavor.BETA && betaConfig != null) {
-                betaConfig.postHooks.each { hook ->
-                    hook(versionString)
+                    manifest.attributes().put(ns.versionCode, versionCode)
+                    manifest.attributes().put(ns.versionName, versionName)
+                    manifestFile.write(XmlUtil.serialize(manifest))
                 }
             }
         }
-
-        return task
     }
 
-    private makePrepareTask(Project project, VersionType type, VersionFlavor flavor) {
-        def name = "prepare"
-        if (flavor == VersionFlavor.BETA) {
-            name += flavor.name
-        }
-        name += type.name
-        return project.task(name) << {
-            version.update(type)
-
-            // Save new version
-            extension.versionFile.write(version.toJson())
-
-            // Apply to all variants
-            applyVersion(project, flavor)
-        }
-    }
-
-    private applyVersion(Project project, VersionFlavor flavor = VersionFlavor.RELEASE) {
-        project.android.applicationVariants.all { variant ->
-            def versionCode = version.versionCode()
-            def versionName = version.versionNameForFlavor(flavor)
-            variant.mergedFlavor.versionCode = versionCode
-            variant.mergedFlavor.versionName = versionName
+    private static String applyVariantVersionNameSuffix(BaseVariant variant, String versionName) {
+        if (variant.mergedFlavor.versionNameSuffix != null) {
+            return versionName + variant.mergedFlavor.versionNameSuffix
+        } else if (variant.buildType.versionNameSuffix != null) {
+            return versionName + variant.buildType.versionNameSuffix
+        } else {
+            return versionName
         }
     }
 }
