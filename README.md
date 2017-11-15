@@ -31,7 +31,7 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:feature~v2-SNAPSHOT'
+    classpath 'com.github.alexfu:androidautoversion:2.0.0'
   }
 }
 ```
