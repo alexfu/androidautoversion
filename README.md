@@ -1,6 +1,9 @@
 # AndroidAutoVersion
 This is a Gradle plugin, for Android developers, that automates app versioning.
 
+# Migrating from v1
+If you're updating this plugin from version 1, read the [migration guide](https://github.com/alexfu/androidautoversion/wiki/Migration-Guide).
+
 # Why
 Thinking of versioning in terms of major, minor, and patch makes it easier to update your app and takes the guess work out of it.
 
