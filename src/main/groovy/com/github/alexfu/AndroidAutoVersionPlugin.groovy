@@ -2,20 +2,28 @@ package com.github.alexfu
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.BasePlugin
+import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.api.BaseVariant
 import groovy.xml.Namespace
 import groovy.xml.XmlUtil
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.DefaultDomainObjectSet
 
 class AndroidAutoVersionPlugin implements Plugin<Project> {
     private Version version
+    private boolean isAppPlugin
+    private boolean isLibraryPlugin
 
     @Override
     void apply(Project project) {
-        boolean hasAndroidAppPlugin = project.plugins.withType(AppPlugin)
-        if (!hasAndroidAppPlugin) {
-            throw new IllegalStateException("'com.android.application' plugin required.")
+        isAppPlugin = project.plugins.withType(AppPlugin)
+        isLibraryPlugin = project.plugins.withType(LibraryPlugin)
+        if (!isAppPlugin && !isLibraryPlugin) {
+            throw new IllegalStateException("'com.android.application' or 'com.android.library' plugin required.")
         }
 
         setUp(project)
@@ -46,8 +54,17 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     }
 
     private void applyVersion(Project project) {
-        AppExtension android = project.android
-        android.applicationVariants.all { variant ->
+        if (isAppPlugin) {
+            AppExtension android = project.android
+            applyVersion(android.applicationVariants)
+        } else if (isLibraryPlugin) {
+            LibraryExtension android = project.android
+            applyVersion(android.libraryVariants)
+        }
+    }
+
+    private applyVersion(DefaultDomainObjectSet<BaseVariant> variants) {
+        variants.all { variant ->
             variant.outputs.all { output ->
                 output.processManifest.doLast {
                     File manifestFile = new File("$manifestOutputDirectory/AndroidManifest.xml")
@@ -65,7 +82,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
         }
     }
 
-    private static String applyVariantVersionNameSuffix(ApplicationVariant variant, String versionName) {
+    private static String applyVariantVersionNameSuffix(BaseVariant variant, String versionName) {
         if (variant.mergedFlavor.versionNameSuffix != null) {
             return versionName + variant.mergedFlavor.versionNameSuffix
         } else if (variant.buildType.versionNameSuffix != null) {
