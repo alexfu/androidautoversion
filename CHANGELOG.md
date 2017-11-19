@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.0.1](https://github.com/alexfu/androidautoversion/tree/2.0.1) (2017-11-19)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/2.0.0...2.0.1)
+
+**Merged pull requests:**
+
+- Apply versionCode and versionName to merged flavors [\#28](https://github.com/alexfu/androidautoversion/pull/28) ([alexfu](https://github.com/alexfu))
+
 ## [2.0.0](https://github.com/alexfu/androidautoversion/tree/2.0.0) (2017-11-15)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/1.0.0...2.0.0)
 
