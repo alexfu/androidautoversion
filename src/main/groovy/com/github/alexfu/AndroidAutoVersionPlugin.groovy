@@ -64,7 +64,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     private applyVersion(DefaultDomainObjectSet<BaseVariant> variants) {
         variants.all { variant ->
             int versionCode = version.versionCode
-            String versionName = applyVariantVersionNameSuffix(variant, version.versionName)
+            String versionName = version.versionName
 
             variant.mergedFlavor.versionCode = versionCode
             variant.mergedFlavor.versionName = versionName
@@ -76,7 +76,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
                     Namespace ns = new Namespace("http://schemas.android.com/apk/res/android", "android")
 
                     manifest.attributes().put(ns.versionCode, versionCode)
-                    manifest.attributes().put(ns.versionName, versionName)
+                    manifest.attributes().put(ns.versionName, applyVariantVersionNameSuffix(variant, versionName))
                     manifestFile.write(XmlUtil.serialize(manifest))
                 }
             }
