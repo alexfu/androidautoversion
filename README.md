@@ -31,10 +31,12 @@ buildscript {
     maven { url 'https://jitpack.io' }
   }
   dependencies {
-    classpath 'com.github.alexfu:androidautoversion:2.0.0'
+    classpath 'com.github.alexfu:androidautoversion:$latest_version'
   }
 }
 ```
+
+Change `$latest_version` to the latest release version found [here](https://github.com/alexfu/androidautoversion/releases).
 
 ## Step 2
 Include the following in your app-level `build.gradle` file:
