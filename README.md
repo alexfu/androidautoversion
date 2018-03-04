@@ -49,7 +49,7 @@ apply plugin: 'com.github.alexfu.androidautoversion'
 Remove `versionCode` and `versionName` from your `defaultConfig` block!
 
 # Usage
-When building your project for the first time with this plugin, you should notice a new file added to your project: `[module name]/version`. This is called a verion file. You should check this file into version control (i.e. git) since this file will contain the current version information.
+When building your project for the first time with this plugin, you should notice a new file added to your project: `[module name]/version`. This is called a version file. You should check this file into version control (i.e. git) since this file will contain the current version information.
 
 Every time you want to make a release, decide if it's a major, minor, or a patch. If you're not sure, check out the rules outlined [here](http://semver.org/) to make your decision. Then, once you've decided, run one of the following gradle tasks:
 
