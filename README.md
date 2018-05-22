@@ -51,6 +51,23 @@ Remove `versionCode` and `versionName` from your `defaultConfig` block!
 # Usage
 When building your project for the first time with this plugin, you should notice a new file added to your project: `[module name]/version`. This is called a version file. You should check this file into version control (i.e. git) since this file will contain the current version information.
 
+If you're adding AndroidAutoVersion to an already existing project you need to populate the version file's `major`, `minor`, `patch`, and `buildNumber` fields with what was in the `versionName` and `versionCode` fields.
+
+For example, a project with the following `app/build.gradle` file:
+
+```groovy
+  defaultConfig {
+    versionName "2.0.5"
+    versionCode 9
+  }
+```
+
+Should update the version file to look like so:
+
+```json
+{"major":2,"minor":0,"patch":5,"buildNumber":9}
+```
+
 Every time you want to make a release, decide if it's a major, minor, or a patch. If you're not sure, check out the rules outlined [here](http://semver.org/) to make your decision. Then, once you've decided, run one of the following gradle tasks:
 
 - `./gradlew bumpPatch`
