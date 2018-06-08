@@ -66,10 +66,10 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             int versionCode = version.versionCode
             String versionName = version.versionName
 
-            variant.mergedFlavor.versionCode = versionCode
-            variant.mergedFlavor.versionName = versionName
-
             variant.outputs.all { output ->
+                output.versionNameOverride = versionName
+                output.versionCodeOverride = versionCode
+
                 output.processManifest.doLast {
                     File manifestFile = new File("$manifestOutputDirectory/AndroidManifest.xml")
                     Node manifest = new XmlParser().parse(manifestFile)
