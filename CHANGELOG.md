@@ -1,5 +1,14 @@
 # Change Log
 
+## [3.0.0](https://github.com/alexfu/androidautoversion/tree/3.0.0) (2018-06-11)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/2.0.2...3.0.0)
+
+**Merged pull requests:**
+
+- Fix \#32 Compatibility issue with Gradle 4.6 [\#33](https://github.com/alexfu/androidautoversion/pull/33) ([breaxta](https://github.com/breaxta))
+- Add instructions for adding to existing project [\#31](https://github.com/alexfu/androidautoversion/pull/31) ([ChrisGuzman](https://github.com/ChrisGuzman))
+- updated version reference in README [\#30](https://github.com/alexfu/androidautoversion/pull/30) ([jamez14](https://github.com/jamez14))
+
 ## [2.0.2](https://github.com/alexfu/androidautoversion/tree/2.0.2) (2017-11-20)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/2.0.1...2.0.2)
 
