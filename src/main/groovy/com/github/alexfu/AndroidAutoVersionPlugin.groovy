@@ -4,6 +4,7 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
+import com.android.build.gradle.api.ApkVariantOutput
 import com.android.build.gradle.api.BaseVariant
 import groovy.xml.Namespace
 import groovy.xml.XmlUtil
@@ -49,6 +50,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
     private void setUp(Project project) {
         File versionFile = project.file("version")
         version = new Version(versionFile)
+        project.extensions.create('androidAutoVersion', AndroidAutoVersionExtension, version.versionName, version.versionCode)
     }
 
     private void applyVersion(Project project) {
@@ -66,7 +68,7 @@ class AndroidAutoVersionPlugin implements Plugin<Project> {
             int versionCode = version.versionCode
             String versionName = version.versionName
 
-            variant.outputs.all { output ->
+            variant.outputs.all { ApkVariantOutput output ->
                 output.versionNameOverride = versionName
                 output.versionCodeOverride = versionCode
 

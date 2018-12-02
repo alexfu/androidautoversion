@@ -46,7 +46,14 @@ apply plugin: 'com.github.alexfu.androidautoversion'
 ```
 
 ## Step 3
-Remove `versionCode` and `versionName` from your `defaultConfig` block!
+Replace `versionCode` and `versionName`:
+
+```groovy
+  defaultConfig {
+    versionName androidAutoVersion.versionName
+    versionCode androidAutoVersion.versionCode
+  }
+```
 
 # Usage
 When building your project for the first time with this plugin, you should notice a new file added to your project: `[module name]/version`. This is called a version file. You should check this file into version control (i.e. git) since this file will contain the current version information.
