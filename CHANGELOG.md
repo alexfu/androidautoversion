@@ -1,5 +1,12 @@
 # Change Log
 
+## [3.0.2](https://github.com/alexfu/androidautoversion/tree/3.0.2) (2019-05-04)
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/3.0.1...3.0.2)
+
+**Merged pull requests:**
+
+- Bugfix for Issue 34: Manifest file not found [\#37](https://github.com/alexfu/androidautoversion/pull/37) ([ewoks](https://github.com/ewoks))
+
 ## [3.0.1](https://github.com/alexfu/androidautoversion/tree/3.0.1) (2018-12-02)
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/3.0.0...3.0.1)
 
