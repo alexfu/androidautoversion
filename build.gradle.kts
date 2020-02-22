@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "com.github.alexfu"
-version = "3.0.2"
+version = "3.1.0"
 
 repositories {
     mavenCentral()
