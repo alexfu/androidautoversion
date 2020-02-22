@@ -24,11 +24,11 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
         check(!isAppPlugin || !isLibraryPlugin) {
             "'com.android.application' or 'com.android.library' plugin required."
         }
-        setUp(project)
-        createTasks(project)
+        setUp()
+        createTasks()
     }
 
-    private fun setUp(project: Project) {
+    private fun setUp() {
         if (!versionFile.exists()) {
             info("Version file does not exist, auto generating a default one.")
             Version().writeTo(versionFile)
@@ -43,7 +43,7 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
         registerTask(name = "bumpMinor", description = "Increases minor version by 1 and zeroes out patch version") {
             version.update(VersionType.MINOR).writeTo(versionFile)
         }
-        registerTask(name = "bumpMajor", description = "Increases major version by 1 and zeroes out minor and patch version") {
+        registerTask(name = "bumpMajor", description = "Increases major version by 1, zeroes out minor and patch version") {
             version.update(VersionType.MAJOR).writeTo(versionFile)
         }
     }
