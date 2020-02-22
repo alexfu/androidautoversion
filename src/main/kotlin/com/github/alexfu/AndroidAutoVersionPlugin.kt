@@ -36,15 +36,25 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
         project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension::class.java, version.versionName, version.buildNumber)
     }
 
-    private fun createTasks(project: Project) {
-        project.task("bumpPatch").doLast {
+    private fun createTasks() {
+        registerTask(name = "bumpPatch", description = "Increases patch version by 1") {
             version.update(VersionType.PATCH).writeTo(versionFile)
         }
-        project.task("bumpMinor").doLast{
+        registerTask(name = "bumpMinor", description = "Increases minor version by 1 and zeroes out patch version") {
             version.update(VersionType.MINOR).writeTo(versionFile)
         }
-        project.task("bumpMajor").doLast {
+        registerTask(name = "bumpMajor", description = "Increases major version by 1 and zeroes out minor and patch version") {
             version.update(VersionType.MAJOR).writeTo(versionFile)
+        }
+    }
+
+    private fun registerTask(name: String, description: String, exec: () -> Unit) {
+        project.tasks.register(name) {
+            this.group = "AndroidAutoVersion"
+            this.description = description
+            doLast {
+                exec()
+            }
         }
     }
 
