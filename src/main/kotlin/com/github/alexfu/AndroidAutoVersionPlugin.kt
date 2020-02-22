@@ -29,11 +29,11 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
     }
 
     private fun setUp(project: Project) {
-        project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension::class.java, version.versionName, version.buildNumber)
         if (!versionFile.exists()) {
             info("Version file does not exist, auto generating a default one.")
             Version().writeTo(versionFile)
         }
+        project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension::class.java, version.versionName, version.buildNumber)
     }
 
     private fun createTasks(project: Project) {
