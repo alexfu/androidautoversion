@@ -13,7 +13,7 @@ Issue one of these gradle commands:
 - `./gradlew bumpMinor`
 - `./gradlew bumpMajor`
 
-and your app will be updated accordingly.
+and your app version will be updated accordingly.
 
 # Requirements
 
