@@ -1,5 +1,5 @@
 package com.github.alexfu
 
-enum VersionType {
+enum class VersionType {
     MAJOR, MINOR, PATCH
 }
