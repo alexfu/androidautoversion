@@ -1,12 +1,6 @@
 # AndroidAutoVersion
 This is a Gradle plugin, for Android developers, that automates app versioning.
 
-# Features
-
-- Update app version from CLI
-- Automatically commit version update to git 
-- Automatically creates git tag
-
 ```
 AndroidAutoVersion tasks
 ------------------------
@@ -17,6 +11,12 @@ versionMajor - Executes bumpMajor and commits the changes to git
 versionMinor - Executes bumpMinor and commits the changes to git
 versionPatch - Executes bumpPatch and commits the changes to git
 ```
+
+# Features
+
+- Update app version from CLI
+- Automatically commit version update to git 
+- Automatically creates git tag
 
 # Requirements
 
