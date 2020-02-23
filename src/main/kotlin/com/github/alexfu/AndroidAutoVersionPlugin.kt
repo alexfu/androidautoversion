@@ -6,6 +6,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.tasks.TaskProvider
 import java.io.File
 
 private typealias VersionFile = File
@@ -13,9 +15,9 @@ private const val LOG_TAG = "[AndroidAutoVersion]"
 
 class AndroidAutoVersionPlugin : Plugin<Project> {
     private lateinit var project: Project
+    private lateinit var version: Version
+    private lateinit var versionFile: VersionFile
     private val json by lazy { Json(JsonConfiguration.Stable) }
-    private val versionFile by lazy { project.file("version") }
-    private val version by lazy { versionFile.read() }
 
     override fun apply(project: Project) {
         this.project = project
@@ -29,32 +31,58 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
     }
 
     private fun setUp() {
+        versionFile = project.file("version")
         if (!versionFile.exists()) {
             info("Version file does not exist, auto generating a default one.")
             Version().writeTo(versionFile)
         }
+        version = versionFile.read()
         project.extensions.create("androidAutoVersion", AndroidAutoVersionExtension::class.java, version.versionName, version.buildNumber)
     }
 
     private fun createTasks() {
-        registerTask(name = "bumpPatch", description = "Increases patch version by 1") {
-            version.update(VersionType.PATCH).writeTo(versionFile)
+        val bumpPatchTask = registerTask(name = "bumpPatch", description = "Increases patch version by 1") {
+            version = version.update(VersionType.PATCH)
+            version.writeTo(versionFile)
         }
-        registerTask(name = "bumpMinor", description = "Increases minor version by 1 and zeroes out patch version") {
-            version.update(VersionType.MINOR).writeTo(versionFile)
+
+        val bumpMinorTask = registerTask(name = "bumpMinor", description = "Increases minor version by 1 and zeroes out patch version") {
+            version = version.update(VersionType.MINOR)
+            version.writeTo(versionFile)
         }
-        registerTask(name = "bumpMajor", description = "Increases major version by 1, zeroes out minor and patch version") {
-            version.update(VersionType.MAJOR).writeTo(versionFile)
+
+        val bumpMajorTask = registerTask(name = "bumpMajor", description = "Increases major version by 1, zeroes out minor and patch version") {
+            version = version.update(VersionType.MAJOR)
+            version.writeTo(versionFile)
+        }
+
+        registerTask(name = "versionPatch", description = "Executes bumpPatch and commits the changes to git", dependencies = listOf(bumpPatchTask)) {
+            project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
+            project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
+            project.exec { setCommandLine("git", "tag", "v$version") }
+        }
+
+        registerTask(name = "versionMinor", description = "Executes bumpMinor and commits the changes to git", dependencies = listOf(bumpMinorTask)) {
+            project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
+            project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
+            project.exec { setCommandLine("git", "tag", "v$version") }
+        }
+
+        registerTask(name = "versionMajor", description = "Executes bumpMajor and commits the changes to git", dependencies = listOf(bumpMajorTask)) {
+            project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
+            project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
+            project.exec { setCommandLine("git", "tag", "v$version") }
         }
     }
 
-    private fun registerTask(name: String, description: String, exec: () -> Unit) {
-        project.tasks.register(name) {
-            this.group = "AndroidAutoVersion"
-            this.description = description
-            doLast {
-                exec()
+    private fun registerTask(name: String, description: String, dependencies: Iterable<TaskProvider<Task>>? = null, exec: () -> Unit): TaskProvider<Task> {
+        return project.tasks.register(name) {
+            group = "AndroidAutoVersion"
+            setDescription(description)
+            if (dependencies != null) {
+                setDependsOn(dependencies)
             }
+            doLast { exec() }
         }
     }
 
