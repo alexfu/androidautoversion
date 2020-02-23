@@ -93,6 +93,10 @@ If you use `git` (which you should), the plugin also has tasks that will execute
 - `./gradlew versionMinor`
 - `./gradlew versionMajor`
 
+## Example
+
+See this repo for an example / demo of this plugin: https://github.com/alexfu/androidautoversiondemo
+
 # Tips
 
 ## Alpha/Beta
