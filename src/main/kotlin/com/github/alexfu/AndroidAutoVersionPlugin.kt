@@ -56,23 +56,15 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
             version.writeTo(versionFile)
         }
 
-        registerTask(name = "versionPatch", description = "Executes bumpPatch and commits the changes to git", dependencies = listOf(bumpPatchTask)) {
-            project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
-            project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
-            project.exec { setCommandLine("git", "tag", "v$version") }
-        }
+        registerTask(name = "versionPatch", description = "Executes bumpPatch and commits the changes to git", dependencies = listOf(bumpPatchTask), exec = ::commitToGit)
+        registerTask(name = "versionMinor", description = "Executes bumpMinor and commits the changes to git", dependencies = listOf(bumpMinorTask), exec = ::commitToGit)
+        registerTask(name = "versionMajor", description = "Executes bumpMajor and commits the changes to git", dependencies = listOf(bumpMajorTask), exec = ::commitToGit)
+    }
 
-        registerTask(name = "versionMinor", description = "Executes bumpMinor and commits the changes to git", dependencies = listOf(bumpMinorTask)) {
-            project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
-            project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
-            project.exec { setCommandLine("git", "tag", "v$version") }
-        }
-
-        registerTask(name = "versionMajor", description = "Executes bumpMajor and commits the changes to git", dependencies = listOf(bumpMajorTask)) {
-            project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
-            project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
-            project.exec { setCommandLine("git", "tag", "v$version") }
-        }
+    private fun commitToGit() {
+        project.exec { setCommandLine("git", "add", versionFile.absolutePath) }
+        project.exec { setCommandLine("git", "commit", "-m", "Update to $version") }
+        project.exec { setCommandLine("git", "tag", "v$version") }
     }
 
     private fun registerTask(name: String, description: String, dependencies: Iterable<TaskProvider<Task>>? = null, exec: () -> Unit): TaskProvider<Task> {
