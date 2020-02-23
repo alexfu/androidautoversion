@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.2.0](https://github.com/alexfu/androidautoversion/tree/3.2.0) (2020-02-23)
+
+[Full Changelog](https://github.com/alexfu/androidautoversion/compare/3.1.0...3.2.0)
+
+**Merged pull requests:**
+
+- Version tasks [\#41](https://github.com/alexfu/androidautoversion/pull/41) ([alexfu](https://github.com/alexfu))
+- Add task descriptions [\#40](https://github.com/alexfu/androidautoversion/pull/40) ([alexfu](https://github.com/alexfu))
+
 ## [3.1.0](https://github.com/alexfu/androidautoversion/tree/3.1.0) (2020-02-22)
 
 [Full Changelog](https://github.com/alexfu/androidautoversion/compare/3.0.2...3.1.0)
