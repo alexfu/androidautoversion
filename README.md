@@ -1,24 +1,28 @@
 # AndroidAutoVersion
 This is a Gradle plugin, for Android developers, that automates app versioning.
 
-# Migrating from v1
-If you're updating this plugin from version 1, read the [migration guide](https://github.com/alexfu/androidautoversion/wiki/Migration-Guide).
+# Features
 
-# Why
-Thinking of versioning in terms of major, minor, and patch makes it easier to update your app and takes the guess work out of it.
+- Update app version from CLI
+- Automatically commit version update to git 
+- Automatically creates git tag
 
-Issue one of these gradle commands:
-
-- `./gradlew bumpPatch`
-- `./gradlew bumpMinor`
-- `./gradlew bumpMajor`
-
-and your app version will be updated accordingly.
+```
+AndroidAutoVersion tasks
+------------------------
+bumpMajor - Increases major version by 1, zeroes out minor and patch version
+bumpMinor - Increases minor version by 1 and zeroes out patch version
+bumpPatch - Increases patch version by 1
+versionMajor - Executes bumpMajor and commits the changes to git
+versionMinor - Executes bumpMinor and commits the changes to git
+versionPatch - Executes bumpPatch and commits the changes to git
+```
 
 # Requirements
 
 - Android Gradle Plugin 3.0+
 - Gradle 4.0+
+- Git
 
 # Installation
 
@@ -81,11 +85,13 @@ Every time you want to make a release, decide if it's a major, minor, or a patch
 - `./gradlew bumpMinor`
 - `./gradlew bumpMajor`
 
-Running one of these will update the version but will not make a release. To update and make a release, you can append your release task to the end of your update task. For example:
+Running one of these will update the version, but it will be up to you to commit any changes to version control. 
 
-```bash
-./gradlew bumpMinor assembleRelease
-```
+If you use `git` (which you should), the plugin also has tasks that will execute the corresponding bump task, commit the version update, and create the necessary version tag.
+
+- `./gradlew versionPatch`
+- `./gradlew versionMinor`
+- `./gradlew versionMajor`
 
 # Tips
 
@@ -110,5 +116,8 @@ android {
 Because this plugin allows you to update your app version from the command line, you can completely automate your entire release workflow with a simple script.
 
 ```bash
-./gradlew clean bumpPatch assembleRelease && git add app/version && git commit -m "Update version."
+$ ./gradlew clean versionPatch assembleRelease
 ```
+
+# Migrating from v1
+If you're updating this plugin from version 1, read the [migration guide](https://github.com/alexfu/androidautoversion/wiki/Migration-Guide).
