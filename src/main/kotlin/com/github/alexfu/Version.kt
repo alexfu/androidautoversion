@@ -12,7 +12,7 @@ data class Version(
     val versionName: String
         get() = "$major.$minor.$patch"
 
-    fun update(type: VersionType): Version {
+    fun increment(type: VersionType): Version {
         return when (type) {
             VersionType.MAJOR -> {
                 copy(buildNumber = buildNumber + 1, patch = 0, minor = 0, major = major + 1)
