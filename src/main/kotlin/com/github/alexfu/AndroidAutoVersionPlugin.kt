@@ -2,6 +2,7 @@ package com.github.alexfu
 
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
+import com.github.alexfu.VersionType.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import org.gradle.api.Plugin
@@ -41,22 +42,28 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
     }
 
     private fun createTasks() {
+        registerTask(
+            name = "bumpBuild",
+            description = "Increases build number by 1",
+            exec = { incrementVersion(BUILD) }
+        )
+
         val bumpPatchTask = registerTask(
             name = "bumpPatch",
             description = "Increases patch version by 1",
-            exec = { incrementVersion(VersionType.PATCH) }
+            exec = { incrementVersion(PATCH) }
         )
 
         val bumpMinorTask = registerTask(
             name = "bumpMinor",
             description = "Increases minor version by 1 and zeroes out patch version",
-            exec = { incrementVersion(VersionType.MINOR) }
+            exec = { incrementVersion(MINOR) }
         )
 
         val bumpMajorTask = registerTask(
             name = "bumpMajor",
             description = "Increases major version by 1, zeroes out minor and patch version",
-            exec = { incrementVersion(VersionType.MAJOR) }
+            exec = { incrementVersion(MAJOR) }
         )
 
         registerTask(

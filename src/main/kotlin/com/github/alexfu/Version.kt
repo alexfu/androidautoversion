@@ -23,6 +23,9 @@ data class Version(
             VersionType.PATCH -> {
                 copy(buildNumber = buildNumber + 1, patch = patch + 1)
             }
+            VersionType.BUILD -> {
+                copy(buildNumber = buildNumber + 1)
+            }
         }
     }
 
