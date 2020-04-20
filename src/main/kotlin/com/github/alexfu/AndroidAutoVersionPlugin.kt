@@ -2,6 +2,7 @@ package com.github.alexfu
 
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
+import com.github.alexfu.VersionType.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import org.gradle.api.Plugin
@@ -41,24 +42,55 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
     }
 
     private fun createTasks() {
-        val bumpPatchTask = registerTask(name = "bumpPatch", description = "Increases patch version by 1") {
-            version = version.update(VersionType.PATCH)
-            version.writeTo(versionFile)
-        }
+        registerTask(
+            name = "bumpBuild",
+            description = "Increases build number by 1",
+            exec = { incrementVersion(BUILD) }
+        )
 
-        val bumpMinorTask = registerTask(name = "bumpMinor", description = "Increases minor version by 1 and zeroes out patch version") {
-            version = version.update(VersionType.MINOR)
-            version.writeTo(versionFile)
-        }
+        val bumpPatchTask = registerTask(
+            name = "bumpPatch",
+            description = "Increases patch version by 1",
+            exec = { incrementVersion(PATCH) }
+        )
 
-        val bumpMajorTask = registerTask(name = "bumpMajor", description = "Increases major version by 1, zeroes out minor and patch version") {
-            version = version.update(VersionType.MAJOR)
-            version.writeTo(versionFile)
-        }
+        val bumpMinorTask = registerTask(
+            name = "bumpMinor",
+            description = "Increases minor version by 1 and zeroes out patch version",
+            exec = { incrementVersion(MINOR) }
+        )
 
-        registerTask(name = "versionPatch", description = "Executes bumpPatch and commits the changes to git", dependencies = listOf(bumpPatchTask), exec = ::commitToGit)
-        registerTask(name = "versionMinor", description = "Executes bumpMinor and commits the changes to git", dependencies = listOf(bumpMinorTask), exec = ::commitToGit)
-        registerTask(name = "versionMajor", description = "Executes bumpMajor and commits the changes to git", dependencies = listOf(bumpMajorTask), exec = ::commitToGit)
+        val bumpMajorTask = registerTask(
+            name = "bumpMajor",
+            description = "Increases major version by 1, zeroes out minor and patch version",
+            exec = { incrementVersion(MAJOR) }
+        )
+
+        registerTask(
+            name = "versionPatch",
+            description = "Executes bumpPatch and commits the changes to git",
+            dependencies = listOf(bumpPatchTask),
+            exec = ::commitToGit
+        )
+
+        registerTask(
+            name = "versionMinor",
+            description = "Executes bumpMinor and commits the changes to git",
+            dependencies = listOf(bumpMinorTask),
+            exec = ::commitToGit
+        )
+
+        registerTask(
+            name = "versionMajor",
+            description = "Executes bumpMajor and commits the changes to git",
+            dependencies = listOf(bumpMajorTask),
+            exec = ::commitToGit
+        )
+    }
+
+    private fun incrementVersion(type: VersionType) {
+        version = version.increment(type)
+        version.writeTo(versionFile)
     }
 
     private fun commitToGit() {
