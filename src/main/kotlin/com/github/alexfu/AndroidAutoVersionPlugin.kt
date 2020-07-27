@@ -65,6 +65,13 @@ class AndroidAutoVersionPlugin : Plugin<Project> {
             description = "Increases major version by 1, zeroes out minor and patch version",
             exec = { incrementVersion(MAJOR) }
         )
+        
+        registerTask(
+            name = "versionBuild",
+            description = "Executes bumpBuild and commits the changes to git",
+            dependencies = listOf(bumpBuild),
+            exec = ::commitToGit
+        )
 
         registerTask(
             name = "versionPatch",
